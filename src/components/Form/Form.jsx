@@ -30,10 +30,10 @@ const Form = ({ type }) => {
       <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
         Nice to meet you! Enter your details to register.
       </p>
-      <form class="max-w-screen-lg mt-8 gap-3  mb-2 w-80  sm:w-96">
+      <form class="max-w-screen-lg flex flex-col  mt-8 gap-3  mb-2 w-80  sm:w-96">
         {type === "register" && (
           <div>
-            <div className="flex justify-between  items-center bg-white text-2xl ">
+            <div className="flex justify-between  items-center  text-2xl ">
               <Input
                 type="text"
                 label="Username"
@@ -50,11 +50,10 @@ const Form = ({ type }) => {
                 endContent={<FaRegUser />}
                 isInvalid={errors.username ? true : false}
                 errorMessage={errors.username && errors.username.message}
-                classNames={
-                  {
-                    //    inputWrapper: "bg-white"
-                  }
-                }
+                classNames={{
+                  input: "text-base",
+                  label: "text-base",
+                }}
               />
             </div>
             {errors.username && (
@@ -63,7 +62,7 @@ const Form = ({ type }) => {
           </div>
         )}
         <div>
-          <div className="flex mt-2 justify-between items-center bg-white text-2xl ">
+          <div className="flex mt-2 justify-between items-center  text-2xl ">
             <Input
               type="email"
               label="Email"
@@ -78,6 +77,10 @@ const Form = ({ type }) => {
                   message: "Please enter a valid email",
                 },
               })}
+              classNames={{
+                input: "text-base",
+                label: "text-base",
+              }}
               endContent={<MdAlternateEmail />}
             />
           </div>
@@ -86,7 +89,7 @@ const Form = ({ type }) => {
           )}
         </div>
         <div>
-          <div className="flex mt-2 justify-between items-center bg-white text-2xl">
+          <div className="flex mt-2 justify-between items-center  text-2xl">
             <Input
               type={showPass ? "text" : "password"}
               label="Password"
@@ -104,6 +107,10 @@ const Form = ({ type }) => {
                   }
                 },
               })}
+              classNames={{
+                input: "text-base",
+                label: "text-base",
+              }}
               endContent={
                 <button
                   className="focus:outline-none"
