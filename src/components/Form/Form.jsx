@@ -2,6 +2,8 @@
 import { Input } from "@nextui-org/react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { FaRegUser } from "react-icons/fa";
 import { MdAlternateEmail, MdLockOutline } from "react-icons/md";
 import { PiSmileyXEyesBold } from "react-icons/pi";
@@ -10,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { FaRegMehRollingEyes } from "react-icons/fa";
 
 const Form = ({ type }) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -17,6 +20,38 @@ const Form = ({ type }) => {
     formState: { errors },
   } = useForm();
   const [showPass, setShowPass] = useState(false);
+
+  const onSubmit = async (data) => {
+    if (type === "register") {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        router.push("/");
+      }
+      if (res.error) {
+        console.log(res.error.message);
+      }
+    }
+    if (type === "login") {
+      const res = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+
+      if (res.ok) {
+        router.replace("/chats");
+      }
+      if (res.error) {
+        console.log("error", res.error);
+      }
+    }
+  };
 
   const handleShowPass = (e) => {
     e.preventDefault();
@@ -30,14 +65,17 @@ const Form = ({ type }) => {
       <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
         Nice to meet you! Enter your details to register.
       </p>
-      <form class="max-w-screen-lg flex flex-col  mt-8 gap-3  mb-2 w-80  sm:w-96">
+      <form
+        class="max-w-screen-lg flex flex-col  mt-8 gap-3  mb-2 w-80  sm:w-96"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {type === "register" && (
           <div>
             <div className="flex justify-between  items-center  text-2xl ">
               <Input
                 type="text"
                 label="Username"
-                color="secondary"
+                color="success"
                 {...register("username", {
                   required: "Username is required",
                   validate: (val) => {
@@ -66,7 +104,7 @@ const Form = ({ type }) => {
             <Input
               type="email"
               label="Email"
-              color="secondary"
+              color="success"
               className=""
               radius="sm"
               {...register("email", {
@@ -94,7 +132,7 @@ const Form = ({ type }) => {
               type={showPass ? "text" : "password"}
               label="Password"
               className="bg-[#ffff]"
-              color="secondary"
+              color="success"
               radius="sm"
               {...register("password", {
                 required: "Password is required",
@@ -127,12 +165,7 @@ const Form = ({ type }) => {
           )}
         </div>
         <div className="flex mt-2 justify-center w-full items-center bg-white ">
-          <Button
-            color="secondary"
-            className="w-full"
-            radius="sm"
-            type="submit"
-          >
+          <Button color="success" className="w-full" radius="sm" type="submit">
             {type === "register" ? "Register" : "Login"}
           </Button>
         </div>
