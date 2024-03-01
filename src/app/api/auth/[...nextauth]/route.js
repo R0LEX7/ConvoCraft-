@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
+<<<<<<< HEAD
 import {connect} from "../../../../dbConfig/dbConfig"
 import User from "../../../../models/user.model"
 
@@ -8,6 +9,11 @@ import User from "../../../../models/user.model"
 connect()
 
 
+=======
+
+// mongo connection
+// user modal
+>>>>>>> 46f8a00227de28388c76e6a608e52449a4056b88
 
 const handler = NextAuth({
   providers: [
@@ -41,7 +47,11 @@ const handler = NextAuth({
 
   callbacks:{
     async session({session}){
+<<<<<<< HEAD
         const user = await User.findOne({email : session.user.email})
+=======
+        const user = await User.findOne({session.user.email})
+>>>>>>> 46f8a00227de28388c76e6a608e52449a4056b88
         session.user.id = user._id.toString();
 
         session.user = {...session.user , ...user._doc}
