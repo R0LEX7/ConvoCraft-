@@ -1,17 +1,24 @@
-import { Inter } from "next/font/google";
+import { Fira_Code , Work_Sans } from "next/font/google";
 import "../globals.css";
+import { Provider, Topbar } from "../../components/index";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = Work_Sans({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Authentication ConvoCraft",
+  title: "ConvoCraft",
   description: "Next Gen Chat App",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
-      <body>{children}</body>
+      <body className={font.className}>
+        <Provider>
+          <Topbar/>
+            {children}
+
+        </Provider>
+      </body>
     </html>
   );
 }
