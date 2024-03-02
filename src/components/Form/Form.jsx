@@ -13,6 +13,7 @@ import { FaRegMehRollingEyes } from "react-icons/fa";
 
 const Form = ({ type }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -23,6 +24,7 @@ const Form = ({ type }) => {
 
   const onSubmit = async (data) => {
     if (type === "register") {
+      setLoading(true);
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -32,6 +34,7 @@ const Form = ({ type }) => {
       });
 
       if (res.ok) {
+        setLoading(false);
         router.push("/");
       }
       if (res.error) {
@@ -39,12 +42,14 @@ const Form = ({ type }) => {
       }
     }
     if (type === "login") {
+      setLoading(true);
       const res = await signIn("credentials", {
         ...data,
         redirect: false,
       });
 
       if (res.ok) {
+        setLoading(false);
         router.replace("/chats");
       }
       if (res.error) {
@@ -109,10 +114,14 @@ const Form = ({ type }) => {
               radius="sm"
               {...register("email", {
                 required: "Email is required",
-                pattern: {
-                  value:
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: "Please enter a valid email",
+                validate: (val) => {
+                  if (
+                    !val.match(
+                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    )
+                  ) {
+                    return "Please enter a valid email";
+                  }
                 },
               })}
               classNames={{
@@ -160,12 +169,19 @@ const Form = ({ type }) => {
               }
             />
           </div>
+
           {errors.password && (
-            <p className="text-red-500">{errors.password.message}</p>
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
           )}
         </div>
-        <div className="flex mt-2 justify-center w-full items-center bg-white ">
-          <Button color="success" className="w-full" radius="sm" type="submit">
+        <div className="flex mt-2 justify-center w-full items-center bg-transparent ">
+          <Button
+            color="success"
+            isLoading={loading}
+            className="w-full text-white"
+            radius="sm"
+            type="submit"
+          >
             {type === "register" ? "Register" : "Login"}
           </Button>
         </div>
