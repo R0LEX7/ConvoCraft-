@@ -1,6 +1,6 @@
-import { Fira_Code , Work_Sans } from "next/font/google";
+import { Fira_Code, Work_Sans } from "next/font/google";
 import "../globals.css";
-import { Provider, Topbar } from "../../components/index";
+import { Provider, Topbar, TanstackProvider } from "../../components/index";
 
 const font = Work_Sans({ subsets: ["latin"] });
 
@@ -14,9 +14,10 @@ export default function RootLayout({ children }) {
     <html lang="en" className="dark">
       <body className={font.className}>
         <Provider>
-          <Topbar/>
+          <TanstackProvider>
+            <Topbar />
             {children}
-
+          </TanstackProvider>
         </Provider>
       </body>
     </html>
