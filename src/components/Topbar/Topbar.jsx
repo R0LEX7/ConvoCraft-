@@ -5,35 +5,49 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
+import Link from "next/link";
+import { usePathname} from 'next/navigation';
+
 
 export default function Topbar() {
+
+  const pathname = usePathname();
+
+
   return (
-    <Navbar maxWidth="xl" className="border-b-secondary" isBordered={true} isMenuOpen shouldHideOnScroll>
+    <Navbar
+      maxWidth="xl"
+      className="border-b-secondary"
+      isBordered={true}
+      isMenuOpen
+      shouldHideOnScroll
+    >
       <NavbarBrand>
-        <p className="text-inherit text-xl">ConvoCraft</p>
+        <Link href="/chats">
+          <p className="text-inherit text-xl">ConvoCraft</p>
+        </Link>
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
+        <NavbarItem isActive= {pathname =="/chats"}>
+          <Link color="foreground" href="/chats">
+            Chats
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page" color="secondary">
-            Customers
+        <NavbarItem isActive= {pathname =="/contact"}>
+          <Link href="/contact" aria-current="page" color="secondary">
+            Users
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
+          <Link color="foreground" isActive= {pathname =="/profile"}   href="/profile">
+            Profile
           </Link>
         </NavbarItem>
       </NavbarContent>
