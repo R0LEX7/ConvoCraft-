@@ -71,9 +71,8 @@ const ContactList = () => {
     console.log("seaching...");
   };
   return (
-    <div>
-      contact list
-      <form onSubmit={handleSubmit}>
+    <div className="w-[95%]">
+      <form onSubmit={handleSubmit} className="mb-3">
         <Input
           type="text"
           label="Search"
@@ -86,8 +85,13 @@ const ContactList = () => {
         />
       </form>
       <div>
-        <ScrollShadow hideScrollBar className="">
+        <ScrollShadow hideScrollBar className=" h-[564px] px-2 ">
+        <div className="flex flex-col  justify-center items-center">
+          
+       
           {filteredUsers && filteredUsers.map((contact) => <Contact key={contact._id} contact={contact} />)}
+          {filteredUsers && filteredUsers.map((contact) => <Contact key={contact._id} contact={contact} />)}
+           </div>
         </ScrollShadow>
       </div>
     </div>
@@ -108,8 +112,9 @@ const Contact = ({ contact }) => {
   };
 
   return (
+  <div className="my-4 w-full">
     <Checkbox
-      aria-label={user.name}
+      aria-label={contact.username}
       classNames={{
         base: cn(
           "inline-flex w-full max-w-md bg-content1",
@@ -124,21 +129,22 @@ const Contact = ({ contact }) => {
     >
       <div className="w-full flex justify-between gap-2">
         <User
-          avatarProps={{ size: "md", src: user.avatar }}
+          avatarProps={{ size: "md", src: contact.profilePic }}
           description={
             <Link isExternal href={user.url} size="sm">
-              @{user.username}
+              @{contact.email}
             </Link>
           }
-          name={user.name}
+          name={contact.username}
         />
-        <div className="flex flex-col items-end gap-1">
+        {/*<div className="flex flex-col items-end gap-1">
           <span className="text-tiny text-default-500">{user.role}</span>
           <Chip color="success" size="sm" variant="flat">
             {user.status}
           </Chip>
-        </div>
+        </div>*/}
       </div>
     </Checkbox>
+    </div>
   );
 };

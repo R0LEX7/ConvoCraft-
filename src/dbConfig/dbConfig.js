@@ -13,8 +13,6 @@ export const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
       dbName: "ConvoCraft",
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
     });
     isConnected = true;
     const connection = mongoose.connection;
