@@ -14,8 +14,8 @@ import {
   Input,
 } from "@nextui-org/react";
 
-const getAllUsers = async () => {
-  const response = await fetch("/api/users");
+const getAllUsers = async (search) => {
+  const response = await fetch( search === "" ? "/api/users" : `/api/users/search/${search}`);
   const data = await response.json();
   return data?.data;
 };
@@ -25,6 +25,8 @@ const ContactList = () => {
   const { data: session } = useSession();
 
   const [allUsers, setAllUsers] = useState(null);
+  const [search , setSearch] = useState("");
+  const [err , setErr] = useState(true)
 
   let currentUser;
 
@@ -38,13 +40,13 @@ const ContactList = () => {
     }
   }, [session]);
 
- const { data, error, isPending ,  isSuccess, } = useQuery({
+ const { data, error, isPending ,isSuccess,refetch} =useQuery({
   queryKey: ["users"],
-  queryFn: getAllUsers,
+  queryFn:() =>   getAllUsers(search)
 });
 
 
- let filteredUsers;
+ let filteredUsers =[];
 
   if (isPending) {
     return <span>Loading...</span>;
@@ -55,21 +57,17 @@ const ContactList = () => {
           console.log("filter" , filteredUsers)
   }
 
-// useEffect(() => {
-//   const filteredUsers = data.filter(
-//         (contact) => contact._id !== session?.user._id
-//       );
-//       console.log("Filtered users:", filteredUsers);
-//       setAllUsers(filteredUsers);
-// },[data , session])
-  
-
-  console.log("all", data);
-
   const handleSubmit = (e) => {
+    setErr(true)
     e.preventDefault();
     console.log("seaching...");
+    refetch()
   };
+
+  const handleChange = (e)=> {
+    setErr(false)
+    setSearch(e.target.value)
+  }
   return (
     <div className="w-[95%]">
       <form onSubmit={handleSubmit} className="mb-3">
@@ -77,6 +75,7 @@ const ContactList = () => {
           type="text"
           label="Search"
           placeholder="Search a User"
+          onChange = {handleChange}
           startContent={
             <span>
               <FiSearch />
@@ -85,11 +84,16 @@ const ContactList = () => {
         />
       </form>
       <div>
-        <ScrollShadow hideScrollBar className=" h-[564px] px-2 ">
+        <ScrollShadow hideScrollBar className=" h-[564px] px-2">
         <div className="flex flex-col  justify-center items-center">
-          
+          {filteredUsers.length === 0 &&  err && (
+            <p className="text-danger "
+            >
+               no users found with {search}
+            </p>
+            )
+}
        
-          {filteredUsers && filteredUsers.map((contact) => <Contact key={contact._id} contact={contact} />)}
           {filteredUsers && filteredUsers.map((contact) => <Contact key={contact._id} contact={contact} />)}
            </div>
         </ScrollShadow>
@@ -115,12 +119,13 @@ const Contact = ({ contact }) => {
   <div className="my-4 w-full">
     <Checkbox
       aria-label={contact.username}
+      color="secondary"
       classNames={{
         base: cn(
           "inline-flex w-full max-w-md bg-content1",
           "hover:bg-content2 items-center justify-start",
           "cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-          "data-[selected=true]:border-primary"
+          "data-[selected=true]:border-secondary"
         ),
         label: "w-full",
       }}
@@ -131,8 +136,9 @@ const Contact = ({ contact }) => {
         <User
           avatarProps={{ size: "md", src: contact.profilePic }}
           description={
-            <Link isExternal href={user.url} size="sm">
-              @{contact.email}
+            <Link  color="secondary"
+            size="sm">
+              {contact.email}
             </Link>
           }
           name={contact.username}
