@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
@@ -29,7 +29,7 @@ const createChat = async (currentUser, selected, isGroup, name) => {
   const response = await fetch(`/api/chat`, {
     method: "POST",
     body: JSON.stringify({
-      currentUserId: currentUser._id,
+      currentUserId: currentUser.id,
       members: selected.map((item) => item._id),
       isGroup,
       name,
@@ -40,6 +40,7 @@ const createChat = async (currentUser, selected, isGroup, name) => {
 };
 
 const ContactList = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -61,6 +62,8 @@ const ContactList = () => {
     }
   }, [session]);
 
+
+
   /* data fetching */
   const { data, error, isPending, isSuccess, refetch } = useQuery({
     queryKey: ["users"],
@@ -70,8 +73,13 @@ const ContactList = () => {
   const isGroup = selected.length > 1;
 
   /* post method using tanstack query */
-  const {} = useMutation({
-    mutationFn: () => createChat(currentUser, selected, isGroup, groupName),
+  const chatMutation = useMutation({
+    mutationFn: () => createChat(session.user, selected, isGroup, groupName),
+    onSuccess: (data) => {
+      console.log("created", data);
+      queryClient.invalidateQueries(["chat"])
+    },
+    onError: (err) => console.log("error in creating chat", err),
   });
 
   let filteredUsers = [];
@@ -80,7 +88,6 @@ const ContactList = () => {
     return <span>Loading...</span>;
   } else {
     filteredUsers = data.filter((contact) => contact._id !== session?.user._id);
-    console.log("filter", filteredUsers);
   }
 
   const handleSubmit = (e) => {
@@ -175,6 +182,7 @@ const ContactList = () => {
             type="submit"
             isDisabled={selected.length === 0}
             endContent={<GrLinkNext />}
+            onClick={(e) => chatMutation.mutate()}
           >
             Find or Start a new Chat
           </Button>
@@ -191,7 +199,6 @@ const Contact = ({ contact, handleSelect }) => {
 
   const avatar = "https://avatars.githubusercontent.com/u/30373425?v=4";
 
-  console.log("select ", isSelected);
 
   return (
     <div className="my-4 w-full">
