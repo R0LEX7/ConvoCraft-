@@ -3,6 +3,7 @@ import { connect } from "../../../../dbConfig/dbConfig";
 import { hash, genSalt } from "bcryptjs";
 import isEmail from "validator/lib/isEmail";
 import User from "../../../../models/user.model";
+import myCache from "../../../../dbConfig/nodeCache";
 
 connect();
 
@@ -56,8 +57,12 @@ export async function POST(req) {
     const savedUser = await newUser.save();
 
     console.log("Alert new user ", savedUser);
-    return NextResponse.json({success : true , message : "Login successfully " , data : savedUser}, { status: 201 })
+    myCache.del("allUsers");
+    return NextResponse.json(
+      { success: true, message: "Login successfully ", data: savedUser },
+      { status: 201 }
+    );
   } catch (error) {
-    return NextResponse.json({ error: error.message  }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
