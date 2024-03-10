@@ -18,7 +18,7 @@ const chatSchema = new mongoose.Schema(
 
     name: {
       type: String,
-      required: true,
+      default: "",
     },
     groupPhoto: {
       type: String,

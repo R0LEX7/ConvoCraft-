@@ -9,7 +9,7 @@ connect();
 export async function GET(req, { params }) {
   try {
     const { userId } = params;
-    let allChats = myCache.get(`${userId}chats`);
+    let allChats = await myCache.get(`${userId}chats`);
 
     let isCache = true;
 
@@ -19,13 +19,15 @@ export async function GET(req, { params }) {
         model: User,
       });
       isCache = false;
+      await myCache.set(`${userId}chats`, JSON.stringify(allChats));
     }
-    myCache.set(`${userId}chats`, allChats);
+
+    console.log("all chats ", allChats);
     return NextResponse.json(
       {
         isCache,
         success: true,
-        data: allChats,
+        data: JSON.parse(allChats),
         message: "all chats ",
       },
       { status: 200 }

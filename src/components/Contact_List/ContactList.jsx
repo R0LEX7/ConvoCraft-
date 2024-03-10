@@ -4,14 +4,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
+import {SkeletonLoading} from "../Loader/SkeletonLoading"
+
 import {
   cn,
   Link,
   Chip,
+  Card,
   User,
   Input,
   Button,
   Checkbox,
+  Skeleton,
   ScrollShadow,
 } from "@nextui-org/react";
 
@@ -62,8 +66,6 @@ const ContactList = () => {
     }
   }, [session]);
 
-
-
   /* data fetching */
   const { data, error, isPending, isSuccess, refetch } = useQuery({
     queryKey: ["users"],
@@ -76,8 +78,9 @@ const ContactList = () => {
   const chatMutation = useMutation({
     mutationFn: () => createChat(session.user, selected, isGroup, groupName),
     onSuccess: (data) => {
-      console.log("created", data);
-      queryClient.invalidateQueries(["chat"])
+      console.log("chat -> ", data);
+      router.push(`/chats/${data._id}`);
+      queryClient.invalidateQueries(["chat"]);
     },
     onError: (err) => console.log("error in creating chat", err),
   });
@@ -85,8 +88,19 @@ const ContactList = () => {
   let filteredUsers = [];
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return (
+      <div className="w-[95%] my-1 flex justify-start flex-col gap-4">
+        <Skeleton className="rounded-lg my-3">
+          <div className="h-12 rounded-lg bg-default-300"></div>
+        </Skeleton>
+        <SkeletonLoading />
+        <SkeletonLoading />
+        <SkeletonLoading />
+        <SkeletonLoading />
+      </div>
+    );
   } else {
+    console.log("users ", data);
     filteredUsers = data.filter((contact) => contact._id !== session?.user._id);
   }
 
@@ -198,7 +212,6 @@ const Contact = ({ contact, handleSelect }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const avatar = "https://avatars.githubusercontent.com/u/30373425?v=4";
-
 
   return (
     <div className="my-4 w-full">
