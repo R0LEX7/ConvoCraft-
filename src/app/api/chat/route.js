@@ -19,7 +19,10 @@ export async function POST(req) {
       ? { isGroup, members: [currentUserId, ...members], name }
       : {
           members: { $all: [currentUserId, ...members], $size: 2 },
+          name,
         };
+
+    console.log("query", query);
 
     let chat = await Chat.findOne(query);
 
@@ -39,6 +42,7 @@ export async function POST(req) {
         );
       });
 
+      console.log("debugging " + chat + query);
       Promise.all(updateAllMembers);
     }
 
@@ -50,6 +54,7 @@ export async function POST(req) {
       { status: 200 }
     );
   } catch (error) {
+    console.log("error", error);
     return NextResponse.json(
       {
         success: false,

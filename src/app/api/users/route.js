@@ -7,27 +7,28 @@ connect();
 
 export async function GET(req) {
   try {
-    let allUsers = myCache.get("allUsers");
+    let allUsers = await myCache.get("allUsers");
     let isCache = true;
 
     if (!allUsers) {
       isCache = false;
       console.log("no cache");
       allUsers = await User.find();
+      await myCache.set("allUsers", JSON.stringify(allUsers));
     }
 
-    console.log(myCache);
-    myCache.set("allUsers", allUsers);
+
     return NextResponse.json(
       {
         isCache,
         message: "all users",
         success: true,
-        data: allUsers,
+        data: JSON.parse(allUsers),
       },
       { status: 200 }
     );
   } catch (error) {
+    console.log("error " , error)
     return NextResponse.json(
       { success: false, message: "Server Error", error: error.message },
       { status: 500 }
