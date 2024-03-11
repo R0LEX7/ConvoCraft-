@@ -12,32 +12,52 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 //fnc to retrieve chats from server
 
 const getChats = async (currentUserId, search) => {
-  search = "";
-  const response = await fetch(`/api/users/${currentUserId}`);
+  const response = await fetch(
+    search.trim() === ""
+      ? `/api/users/${currentUserId}`
+      : `/api/users/${currentUserId}/search/${search}`
+  );
 
   const data = await response.json();
   console.log("data ", data);
   return data.data;
 };
 
-const ChatList = ({ currentChatId }) => {
+const ChatList = () => {
   const { data: sessions } = useSession();
   const currentUser = sessions?.user;
   const [search, setSearch] = useState("");
-
-  const { data, isPending } = useQuery({
-    queryKey: ["chats"],
-    queryFn: () => getChats(currentUser._id, search),
-  });
+  const [chatData, setChatData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   let chats;
 
-  if (isPending) {
-    return <SkeletonLoading />;
-  } else {
-    chats = data;
+  useEffect(() => {
+    fetchData();
+  }, [currentUser]);
+
+  const fetchData = async () => {
+    if (currentUser) {
+      setLoading(true);
+      const data = await getChats(currentUser._id, search);
+      setChatData(data);
+      setLoading(false);
+    }
+  };
+  if (loading) {
+    return (
+      <div className="w-[95%] my-1 flex justify-start flex-col gap-4">
+        <Skeleton className="rounded-lg my-3">
+          <div className="h-12 rounded-lg bg-default-300"></div>
+        </Skeleton>
+        <SkeletonLoading />
+        <SkeletonLoading />
+        <SkeletonLoading />
+        <SkeletonLoading />
+      </div>
+    );
   }
-  console.log("chats -> ", data);
+  console.log("chats -> ", chatData);
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -45,15 +65,17 @@ const ChatList = ({ currentChatId }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    fetchData();
   };
 
   return (
     <div className="w-[95%]">
       <form onSubmit={handleSubmit} className="mb-3">
         <Input
-          value={search}
           type="text"
           label="Search"
+          value={search}
           placeholder="Search a Chat"
           onChange={handleChange}
           startContent={
@@ -65,19 +87,19 @@ const ChatList = ({ currentChatId }) => {
       </form>
 
       <div>
-        <ScrollShadow hideScrollBar className={" mb-3 h-[400px] px-2"}>
-          <div className="flex flex-col  justify-center items-center">
-            {data && data.length === 0 && (
+        <ScrollShadow hideScrollBar className={"my-3 h-[400px] px-2"}>
+          <div className="flex flex-col">
+            {chatData && chatData.length === 0 && (
               <p className="text-danger ">no users found with {search}</p>
             )}
 
-            {chats !== undefined &&
-              chats.map((chat, index) => (
+            {chatData !== undefined &&
+              chatData.map((chat, index) => (
                 <ChatBox
                   chat={chat}
                   index={index}
                   currentUser={currentUser}
-                  currentChatId={currentChatId}
+                  // currentChatId={currentChatId}
                 />
               ))}
           </div>
@@ -88,11 +110,3 @@ const ChatList = ({ currentChatId }) => {
 };
 
 export default ChatList;
-
-const LoadingSkeleton = ({ height }) => {
-  return (
-    <Skeleton className="w-full rounded-lg">
-      <div className={`h-${height} rounded-lg bg-default-300`}></div>
-    </Skeleton>
-  );
-};
