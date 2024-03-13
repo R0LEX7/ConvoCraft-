@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import User from "../../../models/user.model";
 import Chat from "../../../models/chat.model";
 import { connect } from "../../../dbConfig/dbConfig";
+import myCache from "../../../dbConfig/nodeCache";
 
 connect();
 
@@ -31,7 +32,7 @@ export async function POST(req) {
         isGroup ? query : { members: [currentUserId, ...members] }
       );
       await chat.save();
-
+      await myCache.del(`${currentUserId}chats`);
       const updateAllMembers = chat.members.map(async (member) => {
         await User.findByIdAndUpdate(
           member._id,

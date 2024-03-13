@@ -10,11 +10,29 @@ export async function GET(req, { params }) {
     const { userId, query } = params;
 
     const searchedChat = await Chat.find({
-      members: userId,
-      name: { $regex: query, $options: "i" },
+      members: { $in: [userId] },
+    }).populate({
+      path: "members",
+      model: User,
     });
 
-    return NextResponse.json({ success: true, data: searchedChat });
+    const byName = searchedChat.filter((chat) =>
+      chat.name.includes(query.toLowerCase())
+    );
+
+    const byUserName = searchedChat.filter((chat) =>
+    chat.members.some((member) =>
+      member.username.toLowerCase().includes(query.toLowerCase())
+    )
+  );
+
+
+    const data = [...byName, ...byUserName];
+
+    return NextResponse.json({
+      success: true,
+      data: data,
+    });
   } catch (error) {
     console.log("error in searching", error);
     return NextResponse.json(
