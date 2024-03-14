@@ -23,7 +23,7 @@ const getChats = async (currentUserId, search) => {
   return data.data;
 };
 
-const ChatList = () => {
+const ChatList = ({ currentChatId }) => {
   const { data: sessions } = useSession();
   const currentUser = sessions?.user;
   const [search, setSearch] = useState("");
@@ -37,19 +37,29 @@ const ChatList = () => {
   }, [currentUser]);
 
   const fetchData = async () => {
+    setLoading(true);
     if (currentUser) {
-      setLoading(true);
       const data = await getChats(currentUser._id, search);
       setChatData(data);
-      setLoading(false);
     }
+    setLoading(false);
   };
+
   if (loading) {
     return (
       <div className="w-[95%] my-1 flex justify-start flex-col gap-4">
-        <Skeleton className="rounded-lg my-3">
-          <div className="h-12 rounded-lg bg-default-300"></div>
-        </Skeleton>
+        <form className="mb-3">
+          <Input
+            type="text"
+            label="Search"
+            placeholder="Search a Chat"
+            startContent={
+              <span>
+                <FiSearch />
+              </span>
+            }
+          />
+        </form>
         <SkeletonLoading />
         <SkeletonLoading />
         <SkeletonLoading />
@@ -89,7 +99,7 @@ const ChatList = () => {
       <div>
         <ScrollShadow hideScrollBar className={"my-3 h-[400px] px-2"}>
           <div className="flex flex-col">
-            {chatData && chatData.length === 0 && (
+            {search.trim().length > 0 && chatData && chatData.length === 0 && (
               <p className="text-danger ">no users found with {search}</p>
             )}
 
@@ -99,7 +109,7 @@ const ChatList = () => {
                   chat={chat}
                   index={index}
                   currentUser={currentUser}
-                  // currentChatId={currentChatId}
+                  currentChatId={currentChatId || null}
                 />
               ))}
           </div>
