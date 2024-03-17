@@ -3,8 +3,23 @@ import Form from "./Form/Form";
 import { Provider } from "./Provider/Provider";
 import TanstackProvider from "./Provider/TanstackProvider";
 import Profile from "./Profile/Profile";
-import ContactList from "./Contact_List/ContactList"
+import ContactList from "./Contact_List/ContactList";
 import ChatList from "./Chat_List/ChatList";
 import ChatDetails from "./Chat_List/ChatDetails";
 
-export { Topbar, Form, Provider, Profile  , ContactList , TanstackProvider , ChatList , ChatDetails};
+const dummyGrpImg = "https://irb.utah.edu/_resources/images/people2.JPG";
+const dummyUserImg =
+  "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?w=740&t=st=1709367527~exp=1709368127~hmac=dd7a0631f0abf18a02f2d6505aeee3a915f5edfca5a7f8a38796370fc54bf777";
+
+export {
+  Topbar,
+  Form,
+  Provider,
+  Profile,
+  ContactList,
+  TanstackProvider,
+  ChatList,
+  ChatDetails,
+  dummyGrpImg,
+  dummyUserImg
+};

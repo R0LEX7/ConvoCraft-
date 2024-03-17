@@ -19,7 +19,6 @@ const getChats = async (currentUserId, search) => {
   );
 
   const data = await response.json();
-  console.log("data ", data);
   return data.data;
 };
 
@@ -34,12 +33,14 @@ const ChatList = ({ currentChatId }) => {
 
   useEffect(() => {
     fetchData();
+    console.log("current user " , currentUser)
   }, [currentUser]);
 
   const fetchData = async () => {
     setLoading(true);
     if (currentUser) {
       const data = await getChats(currentUser._id, search);
+      console.log(" chats data " , data)
       setChatData(data);
     }
     setLoading(false);
@@ -67,7 +68,6 @@ const ChatList = ({ currentChatId }) => {
       </div>
     );
   }
-  console.log("chats -> ", chatData);
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -106,6 +106,7 @@ const ChatList = ({ currentChatId }) => {
             {chatData !== undefined &&
               chatData.map((chat, index) => (
                 <ChatBox
+                  key={chat._id}
                   chat={chat}
                   index={index}
                   currentUser={currentUser}

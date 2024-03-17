@@ -19,7 +19,7 @@ const ChatBox = ({ chat, currentUser , currentChatId }) => {
 
   return (
     <div
-      className={` border-b-1 rounded-xl cursor-pointer border-[#18181B] p-2 ${isSelectedChat ? "bg-secondary-100" : ""}`}
+      className={` rounded-xl cursor-pointer border-[#18181B] p-2 ${isSelectedChat && "bg-secondary-100"}`}
       onClick={() => router.push(`/chats/${chat._id}`)}
     >
       {chat.isGroup ? (
