@@ -10,6 +10,7 @@ import { PiSmileyXEyesBold } from "react-icons/pi";
 import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { FaRegMehRollingEyes } from "react-icons/fa";
+import toast, { Toaster } from 'react-hot-toast';
 
 const Form = ({ type }) => {
   const router = useRouter();
@@ -33,12 +34,13 @@ const Form = ({ type }) => {
         body: JSON.stringify(data),
       });
 
+      setLoading(false);
       if (res.ok) {
-        setLoading(false);
         router.push("/");
       }
       if (res.error) {
         console.log(res.error.message);
+        toast.error(res.error);
       }
     }
     if (type === "login") {
@@ -48,12 +50,14 @@ const Form = ({ type }) => {
         redirect: false,
       });
 
+      setLoading(false);
       if (res.ok) {
-        setLoading(false);
         router.replace("/chats");
       }
       if (res.error) {
+
         console.log("error", res.error);
+        toast.error(res.error);
       }
     }
   };
