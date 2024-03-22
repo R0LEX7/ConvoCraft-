@@ -22,7 +22,7 @@ export async function GET(req, { params }) {
       await myCache.set(`${userId}chats`, JSON.stringify(allChats));
     }
 
-    console.log("all chats ", allChats);
+
     return NextResponse.json(
       {
         isCache,

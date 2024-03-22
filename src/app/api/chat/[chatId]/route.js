@@ -9,6 +9,9 @@ export async function GET(req, { params }) {
     const chat = await Chat.findById(chatId).populate({
       path: "members",
       model: User,
+    }).populate({
+      path: "message",
+      model: "Message"
     });
     return NextResponse.json({ success: true, data: chat }, { status: 200 });
   } catch (error) {
