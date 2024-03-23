@@ -2,17 +2,22 @@ import { NextResponse, NextRequest } from "next/server";
 import { connect } from "../../../../dbConfig/dbConfig";
 import User from "../../../../models/user.model";
 import Chat from "../../../../models/chat.model";
+import Message from "../../../../models/message.model";
 
 export async function GET(req, { params }) {
   try {
     const { chatId } = params;
-    const chat = await Chat.findById(chatId).populate({
-      path: "members",
-      model: User,
-    }).populate({
-      path: "message",
-      model: "Message"
-    });
+    const chat = await Chat.findById(chatId)
+      .populate({
+        path: "members",
+        model: User,
+      })
+      .populate({
+        path: "message",
+        model: Message,
+        populate: { path: "sender seenBy", model: "User" },
+      })
+
     return NextResponse.json({ success: true, data: chat }, { status: 200 });
   } catch (error) {
     console.log("error in getting chat details ", error.message);

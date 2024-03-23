@@ -24,6 +24,9 @@ export async function POST(req) {
         };
 
     console.log("query", query);
+    [...members, currentUserId].map(
+      async (id) => await myCache.del(`${id}chats`)
+    );
 
     let chat = await Chat.findOne(query);
 
@@ -43,7 +46,6 @@ export async function POST(req) {
         );
       });
 
-      console.log("debugging " + chat + query);
       Promise.all(updateAllMembers);
     }
 

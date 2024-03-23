@@ -27,7 +27,7 @@ export async function GET(req, { params }) {
       {
         isCache,
         success: true,
-        data: JSON.parse(allChats),
+        data: isCache ? JSON.parse(allChats) : allChats,
         message: "all chats ",
       },
       { status: 200 }
