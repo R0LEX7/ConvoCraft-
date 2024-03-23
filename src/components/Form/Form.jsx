@@ -144,7 +144,7 @@ const Form = ({ type }) => {
             <Input
               type={showPass ? "text" : "password"}
               label="Password"
-              className="bg-[#ffff]"
+              className=""
               color="success"
               radius="sm"
               {...register("password", {

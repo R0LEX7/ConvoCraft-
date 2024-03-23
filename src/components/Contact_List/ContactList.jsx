@@ -87,7 +87,7 @@ const ContactList = () => {
 
   let filteredUsers = [];
 
-  if (isPending) {
+  if (!data) {
     return (
       <div className="w-[95%] my-1 flex justify-start flex-col gap-4">
         <Skeleton className="rounded-lg my-3">
