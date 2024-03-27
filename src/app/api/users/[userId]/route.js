@@ -3,6 +3,7 @@ import User from "../../../../models/user.model";
 import Chat from "../../../../models/chat.model";
 import { connect } from "../../../../dbConfig/dbConfig";
 import myCache from "../../../../dbConfig/nodeCache";
+import Message from "../../../../models/message.model";
 
 connect();
 
@@ -14,14 +15,19 @@ export async function GET(req, { params }) {
     let isCache = true;
 
     if (!allChats) {
-      allChats = await Chat.find({ members: userId }).populate({
-        path: "members",
-        model: User,
-      });
+      allChats = await Chat.find({ members: userId })
+        .populate({
+          path: "members",
+          model: User,
+        })
+        .populate({
+          path: "message",
+          model: Message,
+          populate: { path: "seenBy sender", User },
+        });
       isCache = false;
       await myCache.set(`${userId}chats`, JSON.stringify(allChats));
     }
-
 
     return NextResponse.json(
       {
