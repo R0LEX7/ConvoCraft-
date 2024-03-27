@@ -40,7 +40,6 @@ const ChatList = ({ currentChatId }) => {
     setLoading(true);
     if (currentUser) {
       const data = await getChats(currentUser._id, search);
-      console.log(" chats data " , data)
       setChatData(data);
     }
     setLoading(false);

@@ -111,7 +111,7 @@ const ChatDetails = ({ chatId, currentUser }) => {
       </Card>
       {/* message box */}
       <div>
-        <div className="h-[400px] py-1">
+        <div className="h-[400px] py-1 overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
           {data?.message.map((message) => (
             <MessageBox
               message={message}
@@ -126,10 +126,11 @@ const ChatDetails = ({ chatId, currentUser }) => {
         >
           <CldUploadButton
             options={{ maxFiles: 1 }}
-            onUpload={sendPhoto}
+            onUpload={(result) =>sendPhoto(result)}
             uploadPreset="tzwbyyhp"
+
           >
-            <span className="text-xl justify-center items-center flex w-14 h-14 p-2 mr-1">
+            <span className="text-xl justify-center items-center flex w-14 h-14 p-2 cursor-pointer hover:scale-125 ease-out hover:font-medium hover:text-secondary-400">
               <BiImageAdd />
             </span>
           </CldUploadButton>
@@ -142,7 +143,7 @@ const ChatDetails = ({ chatId, currentUser }) => {
           />
           {message.trim().length > 0 ? (
             <div
-              className="text-xl justify-center items-center flex w-14 h-14 p-2 mr-1"
+              className="text-xl justify-center items-center flex w-14 h-14 p-2 mr-1 cursor-pointer hover:scale-125 ease-out hover:font-medium hover:text-secondary-400"
               onClick={handleSubmit}
             >
               <VscSend />

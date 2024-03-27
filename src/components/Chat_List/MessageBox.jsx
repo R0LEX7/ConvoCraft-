@@ -20,7 +20,7 @@ const MessageBox = ({ message, currentUser }) => {
           <div className="flex flex-col">
             <Card className="mb-0">
               {message.text ? (
-                <CardBody className="text-sm w-[190px] lg:w-[300px] md:w-[300px] px-2 pt-2">
+                <CardBody className="text-sm w-max px-2 pt-2">
                   {message?.text}
                 </CardBody>
               ) : (
