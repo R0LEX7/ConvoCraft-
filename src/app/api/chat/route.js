@@ -12,9 +12,7 @@ export async function POST(req) {
 
     const { members, currentUserId, isGroup, name } = body;
 
-    console.log(body);
 
-    // define query to find chat
 
     const query = isGroup
       ? { isGroup, members: [currentUserId, ...members], name }
