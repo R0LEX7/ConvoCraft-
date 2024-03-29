@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { connect } from "../../../../dbConfig/dbConfig";
+import { connect } from "../../../../Config/dbConfig";
 import User from "../../../../models/user.model";
 import Chat from "../../../../models/chat.model";
 import Message from "../../../../models/message.model";
@@ -43,11 +43,14 @@ export async function POST(req, { params }) {
         $addToSet: { seenBy: currentUserId },
       },
       { new: true }
-    ).populate({
-      path: "seenBy sender",
-      model: User,
-    });
-    return NextResponse.json({message : "seen all msgs by currentUser"},{status : 200})
+    );
+    const updatedMessages = await Message.find({ chat: chatId })
+      .populate("sender")
+      .populate("seenBy");
+    return NextResponse.json(
+      { message: "seen all msgs by currentUser" , updatedMessages },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("error in getting chat details ", error.message);
     return NextResponse.json(
