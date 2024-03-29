@@ -1,25 +1,25 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Image, User, Card, CardBody, Input } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
+import { User, Card, Input } from "@nextui-org/react";
 import { dummyGrpImg, dummyUserImg } from "../index";
 import { VscSend } from "react-icons/vsc";
 import MessageBox from "./MessageBox";
 import { CldUploadButton } from "next-cloudinary";
 import { BiImageAdd } from "react-icons/bi";
+import { pusherClient } from "../../Config/pusher.js";
 
 const getChatDetails = async (chatId) => {
   const response = await fetch(`/api/chat/${chatId}`);
   const data = await response.json();
-  console.log(data?.data);
+
   return data?.data;
 };
 
 const ChatDetails = ({ chatId, currentUser }) => {
   const [otherMembers, setOtherMembers] = useState([]);
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState("");
-  console.log("current user ",currentUser )
+  const [chat, setChat] = useState(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["chatDetails"],
@@ -66,11 +66,15 @@ const ChatDetails = ({ chatId, currentUser }) => {
   };
 
   useEffect(() => {
-    if (data)
+    if (data) {
+      setChat(data);
       setOtherMembers(
         data?.members.filter((member) => member._id !== currentUser?._id)
       );
+    }
   }, [data, currentUser]);
+
+  console.log("chat ", chat);
 
   // handle message
   const handleChange = (e) => {
@@ -78,22 +82,42 @@ const ChatDetails = ({ chatId, currentUser }) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("message ", message);
+
     if (message.trim().length > 0) {
       sendMessage();
     }
   };
 
+  useEffect(() => {
+    pusherClient.subscribe(chatId);
+    const handleMsg = async (newMsg) => {
+      console.log("new msg", newMsg);
+      setChat((prvChat) => {
+        return {
+          ...prvChat,
+          message: [...prvChat.message, newMsg],
+        };
+      });
+    };
+
+    pusherClient.bind("new-message", handleMsg);
+
+    return () => {
+      pusherClient.unsubscribe(chatId);
+      pusherClient.unbind("new-message", handleMsg);
+    };
+  }, [chatId]);
+
   return (
     <div className="w-[95%] rounded-lg ">
       {/* chat header */}
       <Card className="h-[56px] flex justify-start  bg-[#27272A] px-2 lg:px-3 md:px-3">
-        {data?.isGroup ? (
+        {chat?.isGroup ? (
           <User
             className="h-[56px] w-fit"
-            name={data.name.length > 0 ? data.name : "Group name"}
+            name={chat.name.length > 0 ? chat.name : "Group name"}
             avatarProps={{
-              src: data.groupPhoto.length > 0 ? data.groupPhoto : dummyGrpImg,
+              src: chat.groupPhoto.length > 0 ? chat.groupPhoto : dummyGrpImg,
             }}
           />
         ) : (
@@ -112,13 +136,14 @@ const ChatDetails = ({ chatId, currentUser }) => {
       {/* message box */}
       <div>
         <div className="h-[400px] py-1 overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
-          {data?.message.map((message) => (
-            <MessageBox
-              message={message}
-              key={message._id}
-              currentUser={currentUser}
-            />
-          ))}
+          {chat &&
+            chat?.message.map((message) => (
+              <MessageBox
+                message={message}
+                key={message._id}
+                currentUser={currentUser}
+              />
+            ))}
         </div>
         <form
           onSubmit={handleSubmit}
@@ -126,9 +151,8 @@ const ChatDetails = ({ chatId, currentUser }) => {
         >
           <CldUploadButton
             options={{ maxFiles: 1 }}
-            onUpload={(result) =>sendPhoto(result)}
+            onUpload={(result) => sendPhoto(result)}
             uploadPreset="tzwbyyhp"
-
           >
             <span className="text-xl justify-center items-center flex w-14 h-14 p-2 cursor-pointer hover:scale-125 ease-out hover:font-medium hover:text-secondary-400">
               <BiImageAdd />

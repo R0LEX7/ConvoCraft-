@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 
-import { connect } from "../../../../dbConfig/dbConfig";
+import { connect } from "../../../../Config/dbConfig";
 import User from "../../../../models/user.model";
 
 connect();

@@ -33,7 +33,7 @@ const ChatList = ({ currentChatId }) => {
 
   useEffect(() => {
     fetchData();
-    console.log("current user " , currentUser)
+
   }, [currentUser]);
 
   const fetchData = async () => {

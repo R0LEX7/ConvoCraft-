@@ -10,12 +10,11 @@ const dummyUserImg =
 const getChatDetails = async (chatId) => {
   const response = await fetch(`/api/chat/${chatId}`);
   const data = await response.json();
-  console.log(data?.data);
+
   return data?.data;
 };
 
 const ChatBox = ({ chat, currentUser, currentChatId }) => {
-  console.log("chat ", chat);
   const [desc, setDesc] = useState({ text: "", time: "" });
   const router = useRouter();
   const otherMembers = chat?.members.filter(
@@ -27,7 +26,6 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
   const lastMessage =
     chat?.message.length > 0 && chat?.message[chat?.message.length - 1];
 
-  console.log(" my data -> ", chat?.message, lastMessage);
   const seen = lastMessage?.seenBy?.find(
     (member) => member._id === currentUser?.id
   );
@@ -39,8 +37,6 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
     desc.text = "Send a message";
     desc.time = chat?.createdAt;
   }
-
-  console.log("seen ", seen);
 
   if (currentChatId === chat._id) isSelectedChat = true;
 
@@ -58,6 +54,9 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
           avatarProps={{
             src: chat.groupPhoto === "" ? dummyGrpImg : chat.groupPhoto,
           }}
+          classNames={{
+            description: `${seen?._id !== currentUser?.id && "text-white"}`,
+          }}
         />
       ) : (
         <User
@@ -70,7 +69,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
                 : chat.profilePic,
           }}
           classNames={{
-            description: `${seen?._id === currentUser?.id && "text-white"}`,
+            description: `${seen?._id !== currentUser?.id && "text-white"}`,
           }}
         />
       )}

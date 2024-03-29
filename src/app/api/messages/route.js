@@ -1,8 +1,9 @@
-import { connect } from "../../../dbConfig/dbConfig";
+import { connect } from "../../../Config/dbConfig";
 import Message from "../../../models/message.model";
 import User from "../../../models/user.model";
 import Chat from "../../../models/chat.model";
 import { NextResponse, NextRequest } from "next/server";
+import { pusherServer } from "../../../Config/pusher";
 
 connect();
 
@@ -40,6 +41,8 @@ export async function POST(req) {
         model: "User",
       })
       .exec();
+
+    await pusherServer.trigger(chatId, "new-message", newMessage);
 
     return NextResponse.json({ success: true, data: msg }, { status: 201 });
   } catch (error) {
