@@ -100,8 +100,8 @@ const ChatList = ({ currentChatId }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     fetchData();
+    setSearch("")
   };
 
   return (
