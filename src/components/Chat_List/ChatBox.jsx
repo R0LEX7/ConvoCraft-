@@ -40,6 +40,8 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
 
   if (currentChatId === chat._id) isSelectedChat = true;
 
+
+
   return (
     <div
       className={` rounded-xl cursor-pointer border-[#18181B] p-2 ${

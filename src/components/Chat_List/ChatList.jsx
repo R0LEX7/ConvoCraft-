@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import { Skeleton, ScrollShadow, Input } from "@nextui-org/react";
+import { pusherClient } from "../../Config/pusher";
 
 import ChatBox from "./ChatBox";
 import { SkeletonLoading } from "../Loader/SkeletonLoading";
@@ -32,8 +33,7 @@ const ChatList = ({ currentChatId }) => {
   let chats;
 
   useEffect(() => {
-    fetchData();
-
+    if (currentUser) fetchData();
   }, [currentUser]);
 
   const fetchData = async () => {
@@ -44,6 +44,32 @@ const ChatList = ({ currentChatId }) => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      pusherClient.subscribe(currentUser._id);
+
+      const handleEvent = async (updatedChat) => {
+        console.log(updatedChat);
+        setChatData((allChats) =>
+          allChats.map((chat) => {
+            if (chat._id === updatedChat.id) {
+              return { ...chat, message: updatedChat.message };
+            } else {
+              return chat;
+            }
+          })
+        );
+      };
+      console.log("chat data" , chatData)
+      pusherClient.bind("updated-chat", handleEvent);
+
+      return () => {
+        pusherClient.unsubscribe(currentUser._id);
+        pusherClient.unbind("updated-chat", handleEvent);
+      };
+    }
+  }, [currentUser]);
 
   if (loading) {
     return (

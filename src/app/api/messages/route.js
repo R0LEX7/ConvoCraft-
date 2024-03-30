@@ -13,12 +13,14 @@ export async function POST(req) {
 
     const { chatId, currentUserId, text, photo } = body;
 
+    const currentUser = await User.findById(currentUserId);
+
     const newMessage = await new Message({
       chat: chatId,
-      sender: currentUserId,
+      sender: currentUser,
       text,
       photo,
-      seenBy: currentUserId,
+      seenBy: currentUser,
     });
 
     const msg = await newMessage.save();
@@ -42,7 +44,25 @@ export async function POST(req) {
       })
       .exec();
 
+    console.log("updated chat msgs ", newMessage);
+
+    {
+      /* trigger real time messaging with a pusher event */
+    }
     await pusherServer.trigger(chatId, "new-message", newMessage);
+
+    const lastMessage = updatedChat.message[updatedChat.message.length - 1];
+
+    updatedChat.members.forEach(async (member) => {
+      try {
+        await pusherServer.trigger(member._id.toString(), "updated-chat", {
+          id: chatId,
+          message: [lastMessage],
+        });
+      } catch (error) {
+        console.log("Failed to trigger update-chat event ", error);
+      }
+    });
 
     return NextResponse.json({ success: true, data: msg }, { status: 201 });
   } catch (error) {

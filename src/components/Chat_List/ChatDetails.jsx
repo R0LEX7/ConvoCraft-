@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { User, Card, Input } from "@nextui-org/react";
 import { dummyGrpImg, dummyUserImg } from "../index";
@@ -25,6 +25,14 @@ const ChatDetails = ({ chatId, currentUser }) => {
     queryKey: ["chatDetails"],
     queryFn: () => getChatDetails(chatId),
   });
+
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [chat?.message]);
 
   const sendMessage = async () => {
     try {
@@ -74,8 +82,6 @@ const ChatDetails = ({ chatId, currentUser }) => {
     }
   }, [data, currentUser]);
 
-  console.log("chat ", chat);
-
   // handle message
   const handleChange = (e) => {
     setMessage(e.target.value);
@@ -91,7 +97,6 @@ const ChatDetails = ({ chatId, currentUser }) => {
   useEffect(() => {
     pusherClient.subscribe(chatId);
     const handleMsg = async (newMsg) => {
-      console.log("new msg", newMsg);
       setChat((prvChat) => {
         return {
           ...prvChat,
@@ -144,6 +149,7 @@ const ChatDetails = ({ chatId, currentUser }) => {
                 currentUser={currentUser}
               />
             ))}
+          <div ref={bottomRef} />
         </div>
         <form
           onSubmit={handleSubmit}
