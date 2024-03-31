@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import User from "../../../../models/user.model";
 import Chat from "../../../../models/chat.model";
 import { connect } from "../../../../Config/dbConfig";
-import myCache from "../../../../Config/nodeCache";
 import Message from "../../../../models/message.model";
 
 connect();

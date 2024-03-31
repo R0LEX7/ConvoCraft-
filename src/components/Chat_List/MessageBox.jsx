@@ -42,9 +42,9 @@ const MessageBox = ({ message, currentUser }) => {
         <div className="w-full flex items-end">
           <div className=" w-full h-auto flex justify-end gap-1 mt-2">
             <div className="flex flex-col">
-              <Card className="mb-0 bg-secondary" >
+              <Card className="mb-0" >
                 {message.text ? (
-                  <CardBody className="text-sm w-max  px-2 pt-2 bg-transparent">
+                  <CardBody className="text-sm w-max  bg-secondary px-2 pt-2 bg-transparent">
                     {message?.text}
                   </CardBody>
                 ) : (

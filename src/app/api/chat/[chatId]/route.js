@@ -4,6 +4,8 @@ import User from "../../../../models/user.model";
 import Chat from "../../../../models/chat.model";
 import Message from "../../../../models/message.model";
 
+connect();
+
 export async function GET(req, { params }) {
   try {
     const { chatId } = params;

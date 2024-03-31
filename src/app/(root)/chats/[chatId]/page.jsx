@@ -47,7 +47,7 @@ const page = () => {
   }, [currentUser, chatId]);
 
   return (
-    <div className="lg:px-10 pt-6 lg:mb-20 flex justify-center items-start px-2 ">
+    <div className="lg:px-10 pt-6 lg:mb-8 flex justify-center items-start px-2 h-fit ">
       <div className="w-1/3 max-lg:hidden">
         <ChatList currentChatId={chatId} />
       </div>

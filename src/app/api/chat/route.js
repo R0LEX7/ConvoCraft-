@@ -3,6 +3,7 @@ import User from "../../../models/user.model";
 import Chat from "../../../models/chat.model";
 import { connect } from "../../../Config/dbConfig";
 import myCache from "../../../Config/nodeCache";
+import { pusherServer } from "../../../Config/pusher";
 
 connect();
 
@@ -11,8 +12,6 @@ export async function POST(req) {
     const body = await req.json();
 
     const { members, currentUserId, isGroup, name } = body;
-
-
 
     const query = isGroup
       ? { isGroup, members: [currentUserId, ...members], name }
@@ -45,6 +44,14 @@ export async function POST(req) {
       });
 
       Promise.all(updateAllMembers);
+
+      {
+        /* trigger event for new chat */
+      }
+
+      chat.members.map(async (member) => {
+        await pusherServer.trigger(member._id.toString(), "new-chat", chat);
+      });
     }
 
     return NextResponse.json(

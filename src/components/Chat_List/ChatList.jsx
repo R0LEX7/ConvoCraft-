@@ -49,8 +49,9 @@ const ChatList = ({ currentChatId }) => {
     if (currentUser) {
       pusherClient.subscribe(currentUser._id);
 
+      /* update the chat in real time to get last msg */
+
       const handleEvent = async (updatedChat) => {
-        console.log(updatedChat);
         setChatData((allChats) =>
           allChats.map((chat) => {
             if (chat._id === updatedChat.id) {
@@ -61,12 +62,19 @@ const ChatList = ({ currentChatId }) => {
           })
         );
       };
-      console.log("chat data" , chatData)
       pusherClient.bind("updated-chat", handleEvent);
+
+      /* update when new chat created */
+
+      const handleChat = (newChat) => {
+        setChatData([...chatData, newChat]);
+      };
+      pusherClient.bind("new-chat", handleChat);
 
       return () => {
         pusherClient.unsubscribe(currentUser._id);
         pusherClient.unbind("updated-chat", handleEvent);
+        pusherClient.unbind("new-chat", handleChat);
       };
     }
   }, [currentUser]);
@@ -101,7 +109,7 @@ const ChatList = ({ currentChatId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     fetchData();
-    setSearch("")
+    setSearch("");
   };
 
   return (
