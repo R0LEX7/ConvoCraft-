@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest as req } from "next/server";
-import { connect } from "../../../../dbConfig/dbConfig";
+import { connect } from "../../../../Config/dbConfig";
 import { hash, genSalt } from "bcryptjs";
 import isEmail from "validator/lib/isEmail";
 import User from "../../../../models/user.model";
