@@ -57,7 +57,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
             src: chat.groupPhoto === "" ? dummyGrpImg : chat.groupPhoto,
           }}
           classNames={{
-            description: `${seen?._id !== currentUser?.id && "text-white"}`,
+            description: `${seen?._id !== currentUser?.id && "text-white"} truncate w-[120px] sm:w-[250px] `,
           }}
         />
       ) : (
@@ -71,7 +71,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
                 : chat.profilePic,
           }}
           classNames={{
-            description: `${seen?._id !== currentUser?.id && "text-white"}`,
+            description: `${seen?._id !== currentUser?.id && "text-white"} truncate  w-[120px] sm:w-[250px] `,
           }}
         />
       )}

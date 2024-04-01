@@ -4,11 +4,11 @@ import { Avatar, Card, CardBody, Image } from "@nextui-org/react";
 import { dummyUserImg } from "../index";
 import { format } from "date-fns";
 
-const MessageBox = ({ message, currentUser }) => {
+const MessageBox = ({ message, currentUser, isGroup }) => {
   return (
     <div>
       {message.sender._id !== currentUser?.id ? (
-        <div className="w-[400px] lg:w-1/2 md:w-1/2 h-auto flex items-start gap-1 mt-2">
+        <div className="w-[400px] lg:w-1/2 md:w-1/2  flex items-start gap-1 mt-2">
           <Avatar
             src={
               message.sender.profilePic.length > 0
@@ -17,10 +17,10 @@ const MessageBox = ({ message, currentUser }) => {
             }
             className="w-6 h-6 text-tiny mt-1"
           />
-          <div className="flex flex-col">
-            <Card className="mb-0">
+          <div className="flex flex-col items-start w-[60%]">
+            <Card className="" radius="sm">
               {message.text ? (
-                <CardBody className="text-sm w-max px-2 pt-2">
+                <CardBody className="text-sm  h-auto   px-2 pt-2">
                   {message?.text}
                 </CardBody>
               ) : (
@@ -34,17 +34,19 @@ const MessageBox = ({ message, currentUser }) => {
               )}
             </Card>
             <span className=" ml- text-[10px] text-right opacity-50 mr-1">
-              by {message?.sender?.username} {format(new Date(message?.createdAt), "p")}
+              {isGroup && `by ${message.sender.username}`}
+
+              {format(new Date(message?.createdAt), "p")}
             </span>
           </div>
         </div>
       ) : (
         <div className="w-full flex items-end">
           <div className=" w-full h-auto flex justify-end gap-1 mt-2">
-            <div className="flex flex-col">
-              <Card className="mb-0" >
+            <div className="flex flex-col items-end w-[60%]">
+              <Card className={` ${message?.text && "bg-secondary"}   `} radius="sm">
                 {message.text ? (
-                  <CardBody className="text-sm w-max  bg-secondary px-2 pt-2 bg-transparent">
+                  <CardBody className="text-sm h-auto px-2 pt-2">
                     {message?.text}
                   </CardBody>
                 ) : (
@@ -58,7 +60,7 @@ const MessageBox = ({ message, currentUser }) => {
                 )}
               </Card>
               <span className=" ml- text-[10px] text-right opacity-50 mr-1">
-                by {message.sender.username}{" "}
+                {isGroup && `by ${message.sender.username}`}
                 {format(new Date(message?.createdAt), "p")}
               </span>
             </div>

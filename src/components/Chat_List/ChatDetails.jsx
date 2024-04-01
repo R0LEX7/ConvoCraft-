@@ -151,6 +151,7 @@ const ChatDetails = ({ chatId, currentUser }) => {
                 message={message}
                 key={message._id}
                 currentUser={currentUser}
+                isGroup={chat?.isGroup}
               />
             ))}
           <div ref={bottomRef} />
