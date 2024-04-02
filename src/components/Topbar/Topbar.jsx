@@ -12,13 +12,11 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import Link from "next/link";
-import { usePathname} from 'next/navigation';
-
+import { usePathname } from "next/navigation";
 
 export default function Topbar() {
-
   const pathname = usePathname();
-
+  console.log("pathname ", pathname);
 
   return (
     <Navbar
@@ -35,18 +33,22 @@ export default function Topbar() {
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem isActive= {pathname =="/chats"}>
-          <Link color="foreground" href="/chats">
+        <NavbarItem isActive={pathname == "/chats"}>
+          <Link color="secondary" href="/chats">
             Chats
           </Link>
         </NavbarItem>
-        <NavbarItem isActive= {pathname =="/contact"}>
+        <NavbarItem isActive={pathname == "/contact"}>
           <Link href="/contact" aria-current="page" color="secondary">
             Users
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" isActive= {pathname =="/profile"}   href="/profile">
+          <Link
+            color="secondary"
+            isActive={pathname == "/profile"}
+            href="/profile"
+          >
             Profile
           </Link>
         </NavbarItem>

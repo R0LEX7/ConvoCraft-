@@ -1,13 +1,25 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { User, Card, Input } from "@nextui-org/react";
+import {
+  User,
+  Card,
+  Input,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
 import { dummyGrpImg, dummyUserImg } from "../index";
 import { VscSend } from "react-icons/vsc";
 import MessageBox from "./MessageBox";
 import { CldUploadButton } from "next-cloudinary";
 import { BiImageAdd } from "react-icons/bi";
 import { pusherClient } from "../../Config/pusher.js";
+import GroupDetails from "./GroupDetails";
 
 const getChatDetails = async (chatId) => {
   const response = await fetch(`/api/chat/${chatId}`);
@@ -20,6 +32,8 @@ const ChatDetails = ({ chatId, currentUser }) => {
   const [otherMembers, setOtherMembers] = useState([]);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState(null);
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["chatDetails"],
@@ -123,11 +137,12 @@ const ChatDetails = ({ chatId, currentUser }) => {
       <Card className="h-[56px] flex justify-start  bg-[#27272A] px-2 lg:px-3 md:px-3">
         {chat?.isGroup ? (
           <User
-            className="h-[56px] w-fit"
+            className="h-[56px] w-fit cursor-pointer"
             name={chat.name.length > 0 ? chat.name : "Group name"}
             avatarProps={{
               src: chat.groupPhoto.length > 0 ? chat.groupPhoto : dummyGrpImg,
             }}
+            onClick={onOpen}
           />
         ) : (
           <User
@@ -186,6 +201,19 @@ const ChatDetails = ({ chatId, currentUser }) => {
           ) : null}
         </form>
       </div>
+
+      <Modal
+        backdrop="blur"
+        size="xs"
+        placement="center"
+        scrollBehavior="inside"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
+        <ModalContent className="text-black">
+          {(onClose) => <GroupDetails chat={chat} onClose={onClose} />}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
