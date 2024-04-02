@@ -17,7 +17,7 @@ const GroupDetails = ({ chat, onClose }) => {
       <ModalHeader className="text-center text-white capitalize">
         {chat.name} - Members
       </ModalHeader>
-      <ModalBody className="text-black w-full">
+      <ModalBody className="text-white w-full">
         <div className="flex flex-col gap-2 justify-start">
           {chat &&
             chat?.members.map((member) => (
