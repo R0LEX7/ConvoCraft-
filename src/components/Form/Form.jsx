@@ -10,7 +10,7 @@ import { PiSmileyXEyesBold } from "react-icons/pi";
 import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { FaRegMehRollingEyes } from "react-icons/fa";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 
 const Form = ({ type }) => {
   const router = useRouter();
@@ -34,12 +34,12 @@ const Form = ({ type }) => {
         body: JSON.stringify(data),
       });
 
-      setLoading(false);
+      setLoading(false);4
       if (res.ok) {
         router.push("/");
       }
       if (res.error) {
-        console.log(res.error.message);
+
         toast.error(res.error);
       }
     }
@@ -55,7 +55,6 @@ const Form = ({ type }) => {
         router.replace("/chats");
       }
       if (res.error) {
-
         console.log("error", res.error);
         toast.error(res.error);
       }
@@ -68,11 +67,11 @@ const Form = ({ type }) => {
   };
   return (
     <div class="relative flex flex-col text-gray-700   shadow-none rounded-xl bg-clip-border w-full h-screen justify-center items-center ">
-      <h4 class="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-        Sign Up
+      <h4 class="block font-sans text-2xl antialiased font-semibold leading-snug text-white  tracking-normal text-blue-gray-900">
+       Convocraft - NextGen Chatting Application
       </h4>
-      <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-        Nice to meet you! Enter your details to register.
+      <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-white ">
+        Nice to meet you! Enter your details to {type === "register" ? type : "Login"}.
       </p>
       <form
         class="max-w-screen-lg flex flex-col  mt-8 gap-3  mb-2 w-80  sm:w-96"
@@ -84,7 +83,8 @@ const Form = ({ type }) => {
               <Input
                 type="text"
                 label="Username"
-                color="success"
+                className="bg-[#27272A]"
+
                 {...register("username", {
                   required: "Username is required",
                   validate: (val) => {
@@ -109,12 +109,12 @@ const Form = ({ type }) => {
           </div>
         )}
         <div>
-          <div className="flex mt-2 justify-between items-center  text-2xl ">
+          <div className="flex mt-2 justify-between items-center text-2xl bg-[#27272A] ">
             <Input
               type="email"
               label="Email"
-              color="success"
-              className=""
+
+
               radius="sm"
               {...register("email", {
                 required: "Email is required",
@@ -128,24 +128,19 @@ const Form = ({ type }) => {
                   }
                 },
               })}
-              classNames={{
-                input: "text-base",
-                label: "text-base",
-              }}
+
               endContent={<MdAlternateEmail />}
             />
           </div>
-          {errors.email && (
-            <p className="text-red-500">{errors.email.message}</p>
-          )}
         </div>
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         <div>
           <div className="flex mt-2 justify-between items-center  text-2xl">
             <Input
               type={showPass ? "text" : "password"}
               label="Password"
-              className=""
-              color="success"
+              className="bg-[#27272A]"
+
               radius="sm"
               {...register("password", {
                 required: "Password is required",
@@ -192,11 +187,11 @@ const Form = ({ type }) => {
       </form>
       {type === "register" ? (
         <Link href="/" className="link">
-          <p className="text-center">Already have an account? Sign In Here</p>
+          <p className="text-center text-slate-100">Already have an account? Sign In Here</p>
         </Link>
       ) : (
         <Link href="/register" className="link">
-          <p className="text-center">Don't have an account? Register Here</p>
+          <p className="text-center text-slate-100">Don't have an account? Register Here</p>
         </Link>
       )}
     </div>
