@@ -1,5 +1,7 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
+import {dummyUserImg} from "../index"
 import {
   Navbar,
   NavbarBrand,
@@ -11,12 +13,42 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+
+const navItems = [
+  { id: 1, name: "chats", path: "/chats" },
+  { id: 2, name: "Users", path: "/contact" },
+  { id: 3, name: "Profile", path: "/profile" },
+];
 
 export default function Topbar() {
   const pathname = usePathname();
-  console.log("pathname ", pathname);
+  const router = useRouter();
+  const { data } = useSession();
+
+  const user = data?.user;
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    // Initial check
+    handleResize();
+
+    // Event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <Navbar
@@ -33,29 +65,23 @@ export default function Topbar() {
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem isActive={pathname == "/chats"}>
-          <Link color="secondary" href="/chats">
-            Chats
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive={pathname == "/contact"}>
-          <Link href="/contact" aria-current="page" color="secondary">
-            Users
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link
-            color="secondary"
-            isActive={pathname == "/profile"}
-            href="/profile"
-          >
-            Profile
-          </Link>
-        </NavbarItem>
+        {navItems.map((item) => (
+          <NavbarItem isActive={pathname === item.path} key={item.id}>
+            <Link
+              color={pathname === item.path ? "black" : "white"}
+              href={item.path}
+              className={`${
+                pathname === item.path ? "black" : "white"
+              } capitalize`}
+            >
+              {item.name}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
 
       <NavbarContent as="div" justify="end">
-        <Dropdown placement="bottom-end">
+        <Dropdown placement="bottom-end" isMobile>
           <DropdownTrigger>
             <Avatar
               isBordered
@@ -64,24 +90,41 @@ export default function Topbar() {
               color="secondary"
               name="Jason Hughes"
               size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              src={
+                user
+                  ? user.profilePic
+                  : dummyUserImg
+              }
             />
           </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">zoey@example.com</p>
-            </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              Log Out
-            </DropdownItem>
-          </DropdownMenu>
+
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">{user?.email}</p>
+              </DropdownItem>
+
+              {isMobile && navItems.map((item) => (
+                <DropdownItem
+                  key={item.id}
+                  className="capitalize"
+                  onClick={() => router.push(item.path)}
+                >
+                  {item.name}
+                </DropdownItem>
+              ))}
+              <DropdownItem
+                key="logout"
+                color="danger"
+                onClick={() => {
+                  signOut();
+                  router.push("/");
+                }}
+              >
+                Log Out
+              </DropdownItem>
+            </DropdownMenu>
+
         </Dropdown>
       </NavbarContent>
     </Navbar>
