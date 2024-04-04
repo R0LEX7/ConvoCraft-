@@ -52,8 +52,8 @@ export async function POST(req) {
     /* stores and save the user in database */
 
     const newUser = new User({
-      email,
-      username,
+      email : email.toLowerCase().trim(),
+      username : username.toLowerCase().trim(),
       password: hashedPassword,
     });
     const savedUser = await newUser.save();
