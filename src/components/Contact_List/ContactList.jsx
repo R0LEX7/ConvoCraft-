@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
-import {SkeletonLoading} from "../Loader/SkeletonLoading"
+import { SkeletonLoading } from "../Loader/SkeletonLoading";
 
 import {
   cn,
@@ -53,6 +53,7 @@ const ContactList = () => {
   const [selected, setSelected] = useState([]);
   const [err, setErr] = useState(true);
   const [groupName, setGroupName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   let currentUser;
 
@@ -78,7 +79,7 @@ const ContactList = () => {
   const chatMutation = useMutation({
     mutationFn: () => createChat(session.user, selected, isGroup, groupName),
     onSuccess: (data) => {
-      console.log("chat -> ", data);
+      setLoading(false);
       router.push(`/chats/${data._id}`);
       queryClient.invalidateQueries(["chat"]);
     },
@@ -100,7 +101,6 @@ const ContactList = () => {
       </div>
     );
   } else {
-    console.log("users ", data);
     filteredUsers = data.filter((contact) => contact._id !== session?.user._id);
   }
 
@@ -190,13 +190,16 @@ const ContactList = () => {
           )}
           <Button
             color="secondary"
-            isLoading={false}
+            isLoading={loading}
             className="w-full text-basse"
             radius="sm"
             type="submit"
             isDisabled={selected.length === 0}
             endContent={<GrLinkNext />}
-            onClick={(e) => chatMutation.mutate()}
+            onClick={(e) => {
+              setLoading(true);
+              chatMutation.mutate();
+            }}
           >
             Find or Start a new Chat
           </Button>

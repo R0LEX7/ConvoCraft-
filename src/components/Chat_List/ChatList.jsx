@@ -98,6 +98,8 @@ const ChatList = ({ currentChatId }) => {
         <SkeletonLoading />
         <SkeletonLoading />
         <SkeletonLoading />
+        <SkeletonLoading />
+        <SkeletonLoading />
       </div>
     );
   }
@@ -113,8 +115,8 @@ const ChatList = ({ currentChatId }) => {
   };
 
   return (
-    <div className="w-[95%]">
-      <form onSubmit={handleSubmit} className="mb-3">
+    <div className="w-[95%] flex justify-center items-center flex-col" >
+      <form onSubmit={handleSubmit} className="mb-3 w-full">
         <Input
           type="text"
           label="Search"
@@ -129,8 +131,8 @@ const ChatList = ({ currentChatId }) => {
         />
       </form>
 
-      <div>
-        <ScrollShadow hideScrollBar className={"my-3 h-[400px] px-2"}>
+      <div className="w-full">
+        <ScrollShadow hideScrollBar className={"my-3 h-[430px] px-2 "}>
           <div className="flex flex-col">
             {search.trim().length > 0 && chatData && chatData.length === 0 && (
               <p className="text-danger ">no users found with {search}</p>

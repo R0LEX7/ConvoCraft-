@@ -44,7 +44,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
 
   return (
     <div
-      className={` rounded-xl cursor-pointer border-[#18181B] p-2 ${
+      className={` rounded-xl cursor-pointer border-[#18181B] p-2 w-full ${
         isSelectedChat && "bg-secondary-200"
       }`}
       onClick={() => router.push(`/chats/${chat._id}`)}
@@ -57,7 +57,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
             src: chat.groupPhoto === "" ? dummyGrpImg : chat.groupPhoto,
           }}
           classNames={{
-            description: `${seen?._id !== currentUser?.id && "text-white"} truncate w-[120px] sm:w-[250px] `,
+            description: `${seen?._id !== currentUser?.id && "text-white"} truncate  w-full `,
           }}
         />
       ) : (
@@ -71,7 +71,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
                 : chat.profilePic,
           }}
           classNames={{
-            description: `${seen?._id !== currentUser?.id && "text-white"} truncate  w-[120px] sm:w-[250px] `,
+            description: `${seen?._id !== currentUser?.id && "text-white"} truncate  w-ful `,
           }}
         />
       )}

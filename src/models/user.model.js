@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
+import { dummyUserImg } from "../components/index";
 
 const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     email: {
       type: String,
@@ -18,7 +19,7 @@ const userSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?w=740&t=st=1709367527~exp=1709368127~hmac=dd7a0631f0abf18a02f2d6505aeee3a915f5edfca5a7f8a38796370fc54bf777",
+      default: dummyUserImg,
     },
     chat: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chat" }],
