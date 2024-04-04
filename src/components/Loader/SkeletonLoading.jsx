@@ -3,7 +3,7 @@ import { Card, Skeleton } from "@nextui-org/react";
 export const SkeletonLoading = () => {
   return (
     <Card
-      className="w-5/6 h-18 flex  gap-2 flex-row items-center p-2 "
+      className="w-2/3 h-18 flex  gap-2 flex-row items-center p-2 "
       radius="lg"
     >
       <div>
