@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
-import {dummyUserImg} from "../index"
+import { dummyUserImg } from "../index";
 import {
   Navbar,
   NavbarBrand,
@@ -12,18 +12,27 @@ import {
   Dropdown,
   DropdownMenu,
   Avatar,
+  Button,
 } from "@nextui-org/react";
+import { RiChat3Line } from "react-icons/ri";
+import { BsPeople, BsPerson, BsChat } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 const navItems = [
-  { id: 1, name: "chats", path: "/chats" },
-  { id: 2, name: "Users", path: "/contact" },
-  { id: 3, name: "Profile", path: "/profile" },
+  { id: 1, name: "Chats", path: "/chats", icon: BsChat },
+  { id: 2, name: "Users", path: "/contact", icon: BsPeople },
+  { id: 3, name: "Profile", path: "/profile", icon: BsPerson },
 ];
 
+const iconMapping = {
+  chats: RiChat3Line,
+  users: BsPeople,
+  profile: BsPeople,
+  // Add more mappings for other navItems as needed
+};
 export default function Topbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -70,11 +79,17 @@ export default function Topbar() {
             <Link
               color={pathname === item.path ? "black" : "white"}
               href={item.path}
-              className={`${
-                pathname === item.path ? "black" : "white"
-              } capitalize`}
             >
-              {item.name}
+              <Button
+                color={pathname === item.path ? "secondary" : "white"}
+                variant="light"
+                className={`${
+                  pathname === item.path && "capitalize font-medium scale-110"
+                }`}
+                startContent={React.createElement(item.icon)}
+              >
+                {item.name}
+              </Button>
             </Link>
           </NavbarItem>
         ))}
@@ -90,41 +105,43 @@ export default function Topbar() {
               color="secondary"
               name="Jason Hughes"
               size="sm"
-              src={
-                user
-                  ? user.profilePic
-                  : dummyUserImg
-              }
+              src={user ? user.profilePic : dummyUserImg}
             />
           </DropdownTrigger>
 
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">{user?.email}</p>
-              </DropdownItem>
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">Signed in as</p>
+              <p className="font-semibold">{user?.email}</p>
+            </DropdownItem>
 
-              {isMobile && navItems.map((item) => (
+            {isMobile &&
+              navItems.map((item) => (
                 <DropdownItem
                   key={item.id}
                   className="capitalize"
+                  color={pathname === item.path ? "secondary" : "white"}
                   onClick={() => router.push(item.path)}
                 >
-                  {item.name}
+                  <div className="flex flex-row">
+                    <span className="mt-[2px]">
+                      {React.createElement(item.icon)}
+                    </span>
+                    <span className="ml-1"> {item.name} </span>
+                  </div>
                 </DropdownItem>
               ))}
-              <DropdownItem
-                key="logout"
-                color="danger"
-                onClick={() => {
-                  signOut();
-                  router.push("/");
-                }}
-              >
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-
+            <DropdownItem
+              key="logout"
+              color="danger"
+              onClick={() => {
+                signOut();
+                router.push("/");
+              }}
+            >
+              Log Out
+            </DropdownItem>
+          </DropdownMenu>
         </Dropdown>
       </NavbarContent>
     </Navbar>
