@@ -34,8 +34,6 @@ const MessageBox = ({ message, currentUser, isGroup }) => {
               )}
             </Card>
             <span className=" ml- text-[10px] text-right opacity-50 mr-1">
-              {isGroup && `by ${message.sender.username}`}
-
               {format(new Date(message?.createdAt), "p")}
             </span>
           </div>
@@ -44,7 +42,10 @@ const MessageBox = ({ message, currentUser, isGroup }) => {
         <div className="w-full flex items-end">
           <div className=" w-full h-auto flex justify-end gap-1 mt-2">
             <div className="flex flex-col items-end w-[60%]">
-              <Card className={` ${message?.text && "bg-secondary"}   `} radius="sm">
+              <Card
+                className={` ${message?.text && "bg-secondary"}   `}
+                radius="sm"
+              >
                 {message.text ? (
                   <CardBody className="text-sm h-auto px-2 pt-2">
                     {message?.text}
@@ -61,7 +62,7 @@ const MessageBox = ({ message, currentUser, isGroup }) => {
               </Card>
               <span className=" ml- text-[10px] text-right opacity-50 mr-1">
                 {isGroup && `by ${message.sender.username}`}
-                {format(new Date(message?.createdAt), "p")}
+                __{format(new Date(message?.createdAt), "p")}
               </span>
             </div>
           </div>

@@ -97,7 +97,6 @@ const ContactList = () => {
         <SkeletonLoading />
         <SkeletonLoading />
         <SkeletonLoading />
-        <SkeletonLoading />
       </div>
     );
   } else {
@@ -139,7 +138,7 @@ const ContactList = () => {
       </form>
       <div className="flex lg:gap-10 md:gap-8 gap-3  lg:flex-row md:flex-col flex-col">
         <div className="lg:w-1/2 md:w-1/2">
-          <ScrollShadow hideScrollBar className={" mb-3 h-[400px] px-2"}>
+          <ScrollShadow hideScrollBar className={" mb-3 h-[430px] px-2"}>
             <div className="flex flex-col  justify-center items-center">
               {filteredUsers.length === 0 && err && (
                 <p className="text-danger ">no users found with {search}</p>

@@ -21,6 +21,8 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
     (member) => member._id !== currentUser._id
   );
 
+  console.log("other member ", otherMembers);
+
   let isSelectedChat = false;
 
   const lastMessage =
@@ -40,8 +42,6 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
 
   if (currentChatId === chat._id) isSelectedChat = true;
 
-
-
   return (
     <div
       className={` rounded-xl cursor-pointer border-[#18181B] p-2 w-full ${
@@ -57,7 +57,10 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
             src: chat.groupPhoto === "" ? dummyGrpImg : chat.groupPhoto,
           }}
           classNames={{
-            description: `${seen?._id !== currentUser?.id && "text-white"} truncate  w-full `,
+            description: `${
+              seen?._id !== currentUser?.id && "text-white"
+            } truncate  w-full `,
+            name: "capitalize",
           }}
         />
       ) : (
@@ -65,13 +68,15 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
           name={otherMembers[0]?.username}
           description={`${desc.text}       ${format(new Date(desc.time), "p")}`}
           avatarProps={{
-            src:
-              otherMembers[0]?.profilePic === ""
-                ? dummyUserImg
-                : chat.profilePic,
+            src: !otherMembers[0]?.profilePic
+              ? dummyUserImg
+              : otherMembers[0]?.profilePic,
           }}
           classNames={{
-            description: `${seen?._id !== currentUser?.id && "text-white"} truncate  w-ful `,
+            description: `${
+              seen?._id !== currentUser?.id && "text-white"
+            } truncate  w-ful `,
+            name: "capitalize",
           }}
         />
       )}

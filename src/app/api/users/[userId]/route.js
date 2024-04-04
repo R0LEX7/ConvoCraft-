@@ -25,7 +25,6 @@ export async function GET(req, { params }) {
           populate: { path: "seenBy sender", User },
         });
       isCache = false;
-      // await myCache.set(`${userId}chats`, JSON.stringify(allChats));
     }
 
     return NextResponse.json(
