@@ -13,9 +13,7 @@ export async function POST(req) {
 
     let { username, email, password } = body;
 
-
-
-    console.log("body -> ", body);
+    await myCache.del("allUsers");
 
     if (!username && !email && !password)
       return NextResponse.json(
@@ -52,14 +50,12 @@ export async function POST(req) {
     /* stores and save the user in database */
 
     const newUser = new User({
-      email : email.toLowerCase().trim(),
-      username : username.toLowerCase().trim(),
+      email: email.toLowerCase().trim(),
+      username: username.toLowerCase().trim(),
       password: hashedPassword,
     });
     const savedUser = await newUser.save();
 
-    console.log("Alert new user ", savedUser);
-     await myCache.del("allUsers");
     return NextResponse.json(
       { success: true, message: "Login successfully ", data: savedUser },
       { status: 201 }

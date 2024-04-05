@@ -9,7 +9,7 @@ connect();
 export async function GET(req, { params }) {
   try {
     const { userId } = params;
-    let allChats ;
+    let allChats;
 
     let isCache = true;
 
@@ -23,7 +23,8 @@ export async function GET(req, { params }) {
           path: "message",
           model: Message,
           populate: { path: "seenBy sender", User },
-        });
+        })
+        .sort({ lastMessageAt: -1 });
       isCache = false;
     }
 
