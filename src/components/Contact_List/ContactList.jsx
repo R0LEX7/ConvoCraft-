@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
 import { SkeletonLoading } from "../Loader/SkeletonLoading";
+import toast , {Toaster} from "react-hot-toast";
 
 import {
   cn,
@@ -30,6 +31,7 @@ const getAllUsers = async (search) => {
 };
 
 const createChat = async (currentUser, selected, isGroup, name) => {
+  if (name.trim() === "") name = "Group Name";
   const response = await fetch(`/api/chat`, {
     method: "POST",
     body: JSON.stringify({
@@ -123,6 +125,7 @@ const ContactList = () => {
   };
   return (
     <div className="w-[95%] ">
+      <Toaster/>
       <form onSubmit={handleSubmit} className="mb-3">
         <Input
           type="text"
@@ -160,6 +163,7 @@ const ContactList = () => {
             <div>
               <form>
                 <Input
+                  required
                   type="text"
                   label="Group Name"
                   placeholder="Group name"
@@ -196,8 +200,12 @@ const ContactList = () => {
             isDisabled={selected.length === 0}
             endContent={<GrLinkNext />}
             onClick={(e) => {
-              setLoading(true);
-              chatMutation.mutate();
+              if (groupName.trim() === "") {
+                toast("Group Name is Required");
+              } else {
+                setLoading(true);
+                chatMutation.mutate();
+              }
             }}
           >
             Find or Start a new Chat

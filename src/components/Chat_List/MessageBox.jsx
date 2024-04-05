@@ -34,6 +34,7 @@ const MessageBox = ({ message, currentUser, isGroup }) => {
               )}
             </Card>
             <span className=" ml- text-[10px] text-right opacity-50 mr-1">
+              {isGroup && `by ${message.sender.username}  `}
               {format(new Date(message?.createdAt), "p")}
             </span>
           </div>
@@ -61,8 +62,7 @@ const MessageBox = ({ message, currentUser, isGroup }) => {
                 )}
               </Card>
               <span className=" ml- text-[10px] text-right opacity-50 mr-1">
-                {isGroup && `by ${message.sender.username}`}
-                __{format(new Date(message?.createdAt), "p")}
+                {format(new Date(message?.createdAt), "p")}
               </span>
             </div>
           </div>

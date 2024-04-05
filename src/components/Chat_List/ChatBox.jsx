@@ -51,7 +51,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
     >
       {chat.isGroup ? (
         <User
-          name={chat?.name}
+          name={chat?.name || "Group Name"}
           description={desc.text}
           avatarProps={{
             src: chat.groupPhoto === "" ? dummyGrpImg : chat.groupPhoto,

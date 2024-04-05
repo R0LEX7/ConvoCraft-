@@ -65,7 +65,8 @@ const UpdateForm = ({ user, onClose }) => {
           />
           <Button color="success" endContent={<FaCamera />}>
             <CldUploadButton
-              options={{ maxFiles: 1 }}
+              options={{ maxFiles: 1  }}
+
               onUpload={uploadPhoto}
               uploadPreset="tzwbyyhp"
             >

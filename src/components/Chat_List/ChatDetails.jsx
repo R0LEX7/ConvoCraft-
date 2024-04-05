@@ -48,7 +48,7 @@ const ChatDetails = ({ chatId, currentUser }) => {
     });
   }, [chat?.message]);
 
-  const sendMessage = async () => {
+  const sendMessage = async (message) => {
     try {
       const response = await fetch(`/api/messages`, {
         method: "POST",
@@ -104,11 +104,9 @@ const ChatDetails = ({ chatId, currentUser }) => {
   const handleChange = (e) => {
     setMessage(e.target.value);
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = (message) => {
     if (message.trim().length > 0) {
-      sendMessage();
+      sendMessage(message);
     }
   };
 
@@ -159,7 +157,7 @@ const ChatDetails = ({ chatId, currentUser }) => {
       </Card>
       {/* message box */}
       <div>
-        <div className="h-[450px] lg:h-[400px] md:h-[400px] py-1 overflow-x-hidden  overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
+        <div className="h-dvh lg:h-[400px] md:h-[400px] py-1 overflow-x-hidden  overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
           {chat &&
             chat?.message.map((message) => (
               <MessageBox
@@ -171,16 +169,13 @@ const ChatDetails = ({ chatId, currentUser }) => {
             ))}
           <div ref={bottomRef} />
         </div>
-        <form
-          onSubmit={handleSubmit}
-          className="flex bg-[#27272a] rounded-xl justify-center items-center"
-        >
+        <div className="flex bg-[#27272a] rounded-xl justify-center items-center">
           <CldUploadButton
             options={{ maxFiles: 1 }}
             onUpload={(result) => sendPhoto(result)}
             uploadPreset="tzwbyyhp"
           >
-            <span className="text-xl justify-center items-center flex w-14 h-14 p-2 cursor-pointer hover:scale-125 ease-out hover:font-medium hover:text-secondary-400">
+            <span className="text-xl justify-center items-center flex w-14 h-14  cursor-pointer hover:scale-125 ease-out hover:font-medium hover:text-secondary-400">
               <BiImageAdd />
             </span>
           </CldUploadButton>
@@ -194,12 +189,17 @@ const ChatDetails = ({ chatId, currentUser }) => {
           {message.trim().length > 0 ? (
             <div
               className="text-xl justify-center items-center flex w-14 h-14 p-2 mr-1 cursor-pointer hover:scale-125 ease-out hover:font-medium hover:text-secondary-400"
-              onClick={handleSubmit}
+              onClick={(e) => {
+                e.preventDefault();
+                const text = message;
+                setMessage("");
+                handleSubmit(text);
+              }}
             >
               <VscSend />
             </div>
           ) : null}
-        </form>
+        </div>
       </div>
 
       <Modal
