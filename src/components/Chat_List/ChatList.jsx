@@ -132,7 +132,7 @@ const ChatList = ({ currentChatId }) => {
       </form>
 
       <div className="w-full">
-        <ScrollShadow hideScrollBar className={"my-3 h-[430px] px-2 "}>
+        <ScrollShadow hideScrollBar className={"my-3 h-[calc(100% - 150px)] px-2 "}>
           <div className="flex flex-col">
             {search.trim().length > 0 && chatData && chatData.length === 0 && (
               <p className="text-danger ">no users found with {search}</p>
