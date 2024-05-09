@@ -20,19 +20,17 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { FaRobot } from "react-icons/fa";
+
 
 const navItems = [
   { id: 1, name: "Chats", path: "/chats", icon: BsChat },
   { id: 2, name: "Users", path: "/contact", icon: BsPeople },
   { id: 3, name: "Profile", path: "/profile", icon: BsPerson },
+  { id: 4, name: "ConvoAI", path: "/convoai", icon: FaRobot },
 ];
 
-const iconMapping = {
-  chats: RiChat3Line,
-  users: BsPeople,
-  profile: BsPeople,
-  // Add more mappings for other navItems as needed
-};
+
 export default function Topbar() {
   const pathname = usePathname();
   const router = useRouter();
