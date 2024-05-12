@@ -21,7 +21,7 @@ const Box = () => {
 
   const [chat, setChat] = useState([]);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { onOpenChange } = useDisclosure();
 
   // handle message
   const handleChange = (e) => {
@@ -40,7 +40,7 @@ const Box = () => {
     setChat([...chat, { text: msg, id: Date.now(), byUser: true }]);
   };
 
-  console.log("msgs -> ", chat);
+  console.log("");
 
   async function generateAnswer(e, text) {
     e.preventDefault();
@@ -63,8 +63,8 @@ const Box = () => {
         }
 
         const data = await response.json();
-        const ans = data.candidates[0].content.parts[0].text;
-
+        const ans = data?.candidates[0]?.content?.parts[0]?.text;
+        console.log("answer ", ans);
         setChat((prevChat) => [
           ...prevChat,
           {
