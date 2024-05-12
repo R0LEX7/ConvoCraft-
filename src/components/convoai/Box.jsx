@@ -64,11 +64,21 @@ const Box = () => {
 
         const data = await response.json();
         const ans = data?.candidates[0]?.content?.parts[0]?.text;
+
+            // Format the answer
+            const formattedAnswer = ans
+            .replace(/(\d+\.\s\*\*)(.*?)\*\*/g, (match, p1, p2) => {
+              return `\n\n${p1} ${p2.trim()}\n`; // Add newlines before numbered points
+            })
+            .replace(/\* (.*?)\*\*/g, (match, p1) => {
+              return `\n* **${p1.trim()}**`; // Add newline before bullet points
+            });
+
         console.log("answer ", ans);
         setChat((prevChat) => [
           ...prevChat,
           {
-            text: ans,
+            text: formattedAnswer,
             id: Date.now(),
             byUser: false,
           },
@@ -137,24 +147,28 @@ const Box = () => {
             </div>
           ) : null}
         </form>
-      </div>
-      <Modal isOpen={generatingAnswer} onOpenChange={onOpenChange}>
+      <Modal isOpen={generatingAnswer} onOpenChange={onOpenChange}
+      size="xs"
+      backdrop="blur"
+      placement="center"
+      >
         <ModalContent>
           {(onClose) => (
             <>
               <Button
                 color="secondary"
                 isLoading={generateAnswer}
-                className="w-full text-basse"
+                className="w-full text-base"
                 radius="sm"
-                type="submit"
+
               >
-                Generating your response..
+                Generating your response...
               </Button>
             </>
           )}
         </ModalContent>
       </Modal>
+      </div>
     </div>
   );
 };
