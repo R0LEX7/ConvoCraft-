@@ -40,7 +40,6 @@ const Box = () => {
     setChat([...chat, { text: msg, id: Date.now(), byUser: true }]);
   };
 
-  console.log("");
 
   async function generateAnswer(e, text) {
     e.preventDefault();
@@ -85,6 +84,14 @@ const Box = () => {
         ]);
       } catch (error) {
         console.log(error);
+        setChat((prevChat) => [
+          ...prevChat,
+          {
+            text: "Sorry - Something went wrong. Please try again!",
+            id: Date.now(),
+            byUser: false,
+          },
+        ]);
       }
 
       setGeneratingAnswer(false);
