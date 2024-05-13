@@ -34,7 +34,6 @@ const Form = ({ type }) => {
         body: JSON.stringify(data),
       });
 
-      setLoading(false);4
       if (res.ok) {
         router.push("/");
       }
@@ -42,6 +41,7 @@ const Form = ({ type }) => {
 
         toast.error(res.error);
       }
+      setLoading(false);
     }
     if (type === "login") {
       setLoading(true);
@@ -50,13 +50,13 @@ const Form = ({ type }) => {
         redirect: false,
       });
 
-      setLoading(false);
       if (res.ok) {
         router.replace("/chats");
       }
       if (res.error) {
         console.log("error", res.error);
         toast.error(res.error);
+        setLoading(false);
       }
     }
   };
@@ -66,15 +66,15 @@ const Form = ({ type }) => {
     setShowPass(!showPass);
   };
   return (
-    <div class="relative flex flex-col text-gray-700   shadow-none rounded-xl bg-clip-border w-full h-screen justify-center items-center ">
-      <h4 class="block font-sans text-2xl antialiased font-semibold leading-snug text-white  tracking-normal text-blue-gray-900">
+    <div class="w-80  sm:w-96 relative flex flex-col text-gray-700   shadow-none rounded-xl bg-clip-border  h-screen justify-center items-center ">
+      <h4 class="block font-sans text-2xl antialiased font-semibold leading-snug text-white text-center tracking-normal text-blue-gray-900">
        Convocraft - NextGen Chatting Application
       </h4>
       <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-white ">
         Nice to meet you! Enter your details to {type === "register" ? type : "Login"}.
       </p>
       <form
-        class="max-w-screen-lg flex flex-col  mt-8 gap-3  mb-2 w-80  sm:w-96"
+        class="max-w-screen-lg flex flex-col w-full  mt-8 gap-3  mb-2 "
         onSubmit={handleSubmit(onSubmit)}
       >
         {type === "register" && (
@@ -175,7 +175,7 @@ const Form = ({ type }) => {
         </div>
         <div className="flex mt-2 justify-center w-full items-center bg-transparent ">
           <Button
-            color="success"
+            color="secondary"
             isLoading={loading}
             className="w-full text-white"
             radius="sm"

@@ -116,7 +116,7 @@ const Box = () => {
       </Card>
       {/* message box */}
       <div>
-        <div className="h-[450px] lg:h-[400px] md:h-[400px] py-1 overflow-x-hidden  overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
+        <div className="h-[65dvh] lg:h-[400px] md:h-[400px] py-1 overflow-x-hidden  overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
           {chat &&
             chat?.map((message) => (
               <MessageBox message={message} key={message.id} />

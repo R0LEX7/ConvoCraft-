@@ -7,10 +7,6 @@ import {
   Input,
   Modal,
   ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
   useDisclosure,
 } from "@nextui-org/react";
 import { dummyGrpImg, dummyUserImg } from "../index";
@@ -20,6 +16,7 @@ import { CldUploadButton } from "next-cloudinary";
 import { BiImageAdd } from "react-icons/bi";
 import { pusherClient } from "../../Config/pusher.js";
 import GroupDetails from "./GroupDetails";
+import toast from "react-hot-toast";
 
 const getChatDetails = async (chatId) => {
   const response = await fetch(`/api/chat/${chatId}`);
@@ -157,7 +154,7 @@ const ChatDetails = ({ chatId, currentUser }) => {
       </Card>
       {/* message box */}
       <div>
-        <div className="h-[450px] lg:h-[400px] md:h-[400px] py-1 overflow-x-hidden  overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
+        <div className="h-[68dvh] lg:h-[400px] md:h-[400px] py-1 overflow-x-hidden  overflow-y-scroll custom-scrollbar scrollbar-hide my-1">
           {chat &&
             chat?.message.map((message) => (
               <MessageBox
