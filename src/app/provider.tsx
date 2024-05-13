@@ -1,6 +1,6 @@
 "use client";
 
-import toast, { Toaster } from "react-hot-toast";
+import  { Toaster } from "react-hot-toast";
 
 import { NextUIProvider } from "@nextui-org/react";
 
@@ -9,6 +9,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <NextUIProvider>
       <Toaster
       position="top-right"
+      toastOptions={{
+
+        style: {
+          background: '#27272A',
+          color: '#fff',
+        }}}
        />
       {children}
     </NextUIProvider>

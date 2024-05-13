@@ -4,7 +4,7 @@ import { Avatar, Card, CardBody, Button } from "@nextui-org/react";
 import { dummyUserImg, aiAvatar } from "../index";
 import ReactMarkdown from "react-markdown";
 import { FaRegCopy } from "react-icons/fa";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import { format } from "date-fns";
 
@@ -12,7 +12,12 @@ const MessageBox = ({ message }) => {
   const copyTextToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(message.text);
-      toast.success("Copied Successfully");
+      toast.success("Copied Successfully" , {
+        iconTheme: {
+          primary: '#9455D3',
+          secondary: '#fff',
+        },
+      });
     } catch (error) {
       console.error("Failed to copy text to clipboard:", error);
       toast.error("Failed to copy text to clipboard");
@@ -20,7 +25,6 @@ const MessageBox = ({ message }) => {
   };
   return (
     <div>
-      <Toaster />
       {!message.byUser ? (
         <div className=" w-[400px] lg:w-1/2 md:w-1/2  flex items-start gap-1 mt-2">
           <Avatar src={aiAvatar} className="w-6 h-6 text-tiny mt-1" />

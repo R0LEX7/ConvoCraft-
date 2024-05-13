@@ -9,6 +9,7 @@ import ChatBox from "./ChatBox";
 import { SkeletonLoading } from "../Loader/SkeletonLoading";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 //fnc to retrieve chats from server
 
@@ -52,6 +53,7 @@ const ChatList = ({ currentChatId }) => {
       /* update the chat in real time to get last msg */
 
       const handleEvent = async (updatedChat) => {
+        console.log("updated " , updatedChat)
         setChatData((allChats) =>
           allChats.map((chat) => {
             if (chat._id === updatedChat.id) {
@@ -61,6 +63,14 @@ const ChatList = ({ currentChatId }) => {
             }
           })
         );
+        toast(` New message from : ${updatedChat?.message[0]?.sender?.username}`, {
+          duration: 4000,
+          icon: "😁",
+          iconTheme: {
+            primary: "#9455D3",
+            secondary: "#fff",
+          },
+        });
       };
       pusherClient.bind("updated-chat", handleEvent);
 
@@ -68,6 +78,9 @@ const ChatList = ({ currentChatId }) => {
 
       const handleChat = (newChat) => {
         setChatData([...chatData, newChat]);
+        toast.success("New Chat Created" , {
+          duration: 4000,
+        })
       };
       pusherClient.bind("new-chat", handleChat);
 
