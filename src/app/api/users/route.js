@@ -14,27 +14,35 @@ export async function GET(req) {
       isCache = false;
       console.log("no cache");
       allUsers = await User.find();
-      await myCache.set("allUsers", JSON.stringify(allUsers), 600);
-    }
+      await myCache.set("allUsers", JSON.stringify(allUsers), "EX", 600);
+      return NextResponse.json(
+        {
+          isCache,
+          message: "all users",
+          success: true,
+          data: allUsers,
+        },
+        { status: 200 }
+      );
+    } else {
+      let parsedData = null;
 
-    let parsedData = null;
-    if (allUsers) {
       try {
         parsedData = JSON.parse(allUsers);
       } catch (error) {
         console.error("Error parsing cached data:", error);
       }
-    }
 
-    return NextResponse.json(
-      {
-        isCache,
-        message: "all users",
-        success: true,
-        data: parsedData,
-      },
-      { status: 200 }
-    );
+      return NextResponse.json(
+        {
+          isCache,
+          message: "all users",
+          success: true,
+          data: parsedData,
+        },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     console.log("error ", error);
     return NextResponse.json(
