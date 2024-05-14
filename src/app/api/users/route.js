@@ -7,42 +7,16 @@ connect();
 
 export async function GET(req) {
   try {
-    let allUsers = await myCache.get("allUsers");
-    let isCache = true;
+    let allUsers = await User.find();
 
-    if (!allUsers) {
-      isCache = false;
-      console.log("no cache");
-      allUsers = await User.find();
-      await myCache.set("allUsers", JSON.stringify(allUsers), "EX", 600);
-      return NextResponse.json(
-        {
-          isCache,
-          message: "all users",
-          success: true,
-          data: allUsers,
-        },
-        { status: 200 }
-      );
-    } else {
-      let parsedData = null;
-
-      try {
-        parsedData = JSON.parse(allUsers);
-      } catch (error) {
-        console.error("Error parsing cached data:", error);
-      }
-
-      return NextResponse.json(
-        {
-          isCache,
-          message: "all users",
-          success: true,
-          data: parsedData,
-        },
-        { status: 200 }
-      );
-    }
+    return NextResponse.json(
+      {
+        message: "all users",
+        success: true,
+        data: allUsers,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("error ", error);
     return NextResponse.json(
