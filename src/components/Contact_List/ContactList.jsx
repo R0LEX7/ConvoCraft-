@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
 import { SkeletonLoading } from "../Loader/SkeletonLoading";
-import toast , {Toaster} from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import {
   cn,
@@ -23,8 +23,9 @@ import {
 import { GrGroup, GrLinkNext } from "react-icons/gr";
 
 const getAllUsers = async (search) => {
+  ;
   const response = await fetch(
-    search === "" ? "/api/users" : `/api/users/search/${search}`
+    search === "" ? "/api/users" : `/api/users/search/${search}`,
   );
   const data = await response.json();
   return data?.data;
@@ -65,12 +66,14 @@ const ContactList = () => {
         router.replace("/");
       } else {
         currentUser = session?.user;
+
+
       }
     }
   }, [session]);
 
   /* data fetching */
-  const { data, error, isPending, isSuccess, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["users"],
     queryFn: () => getAllUsers(search),
   });
@@ -90,7 +93,7 @@ const ContactList = () => {
 
   let filteredUsers = [];
 
-  if (!data) {
+  if (!session?.user || !data) {
     return (
       <div className="w-[95%] my-1 flex justify-start flex-col gap-4">
         <Skeleton className="rounded-lg my-3">
@@ -125,7 +128,7 @@ const ContactList = () => {
   };
   return (
     <div className="w-[95%] ">
-      <Toaster/>
+
       <form onSubmit={handleSubmit} className="mb-3">
         <Input
           type="text"
@@ -200,7 +203,7 @@ const ContactList = () => {
             isDisabled={selected.length === 0}
             endContent={<GrLinkNext />}
             onClick={(e) => {
-              if (groupName.trim() === "") {
+              if (isGroup && groupName.trim() === "") {
                 toast("Group Name is Required");
               } else {
                 setLoading(true);
