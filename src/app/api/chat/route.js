@@ -17,14 +17,9 @@ export async function POST(req) {
       ? { isGroup, members: [currentUserId, ...members], name }
       : {
           members: { $all: [currentUserId, ...members], $size: 2 },
-          name,
         };
 
     console.log("query", query);
-    [...members, currentUserId].map(
-      async (id) => await myCache.del(`${id}chats`)
-    );
-
     let chat = await Chat.findOne(query);
 
     if (!chat) {
@@ -32,7 +27,7 @@ export async function POST(req) {
         isGroup ? query : { members: [currentUserId, ...members] }
       );
       await chat.save();
-      await myCache.del(`${currentUserId}chats`);
+
       const updateAllMembers = chat.members.map(async (member) => {
         await User.findByIdAndUpdate(
           member._id,
