@@ -16,7 +16,6 @@ import { CldUploadButton } from "next-cloudinary";
 import { BiImageAdd } from "react-icons/bi";
 import { pusherClient } from "../../Config/pusher.js";
 import GroupDetails from "./GroupDetails";
-import toast from "react-hot-toast";
 
 const getChatDetails = async (chatId) => {
   const response = await fetch(`/api/chat/${chatId}`);

@@ -53,7 +53,7 @@ const ChatList = ({ currentChatId }) => {
       /* update the chat in real time to get last msg */
 
       const handleEvent = async (updatedChat) => {
-        console.log("updated " , updatedChat)
+        console.log("updated ", updatedChat);
         setChatData((allChats) =>
           allChats.map((chat) => {
             if (chat._id === updatedChat.id) {
@@ -63,14 +63,19 @@ const ChatList = ({ currentChatId }) => {
             }
           })
         );
-        toast(` New message from : ${updatedChat?.message[0]?.sender?.username}`, {
-          duration: 4000,
-          icon: "😁",
-          iconTheme: {
-            primary: "#9455D3",
-            secondary: "#fff",
-          },
-        });
+        if (updatedChat?.message[0]?.sender?._id !== currentUser?._id) {
+          toast(
+            ` New message from : ${updatedChat?.message[0]?.sender?.username}`,
+            {
+              duration: 4000,
+              icon: "😁",
+              iconTheme: {
+                primary: "#9455D3",
+                secondary: "#fff",
+              },
+            }
+          );
+        }
       };
       pusherClient.bind("updated-chat", handleEvent);
 
@@ -78,9 +83,9 @@ const ChatList = ({ currentChatId }) => {
 
       const handleChat = (newChat) => {
         setChatData([...chatData, newChat]);
-        toast.success("New Chat Created" , {
+        toast.success("New Chat Created", {
           duration: 4000,
-        })
+        });
       };
       pusherClient.bind("new-chat", handleChat);
 
@@ -92,7 +97,7 @@ const ChatList = ({ currentChatId }) => {
     }
   }, [currentUser]);
 
-  if (loading) {
+  if (loading && !currentUser) {
     return (
       <div className="w-[95%] my-1 flex justify-start flex-col gap-4">
         <form className="mb-3">
@@ -128,7 +133,7 @@ const ChatList = ({ currentChatId }) => {
   };
 
   return (
-    <div className="w-[95%] flex justify-center items-center flex-col" >
+    <div className="w-[95%] flex justify-center items-center flex-col">
       <form onSubmit={handleSubmit} className="mb-3 w-full">
         <Input
           type="text"
@@ -145,7 +150,10 @@ const ChatList = ({ currentChatId }) => {
       </form>
 
       <div className="w-full">
-        <ScrollShadow hideScrollBar className={"my-3 h-[calc(100% - 150px)] px-2 "}>
+        <ScrollShadow
+          hideScrollBar
+          className={"my-3 h-[calc(100% - 150px)] px-2 "}
+        >
           <div className="flex flex-col">
             {search.trim().length > 0 && chatData && chatData.length === 0 && (
               <p className="text-danger ">no users found with {search}</p>
