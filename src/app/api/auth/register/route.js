@@ -3,7 +3,7 @@ import { connect } from "../../../../Config/dbConfig";
 import { hash, genSalt } from "bcryptjs";
 import isEmail from "validator/lib/isEmail";
 import User from "../../../../models/user.model";
-import myCache from "../../../../Config/nodeCache";
+
 
 connect();
 
@@ -13,7 +13,6 @@ export async function POST(req) {
 
     let { username, email, password } = body;
 
-    await myCache.del("allUsers");
 
     if (!username && !email && !password)
       return NextResponse.json(
