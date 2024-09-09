@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { connect } from "../../../Config/dbConfig";
 import User from "../../../models/user.model";
-import myCache from "../../../Config/nodeCache";
 
 connect();
 

@@ -21,8 +21,6 @@ const ChatBox = ({ chat, currentUser, currentChatId }) => {
     (member) => member._id !== currentUser._id
   );
 
-  console.log("other member ", otherMembers);
-
   let isSelectedChat = false;
 
   const lastMessage =
